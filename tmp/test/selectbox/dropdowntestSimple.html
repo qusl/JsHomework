@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="../../lib/jquery/jquery-2.2.3.min.js"></script>
+    <script src="golbalize.min.js"></script>
+    <script src="../../lib/devextreme/dx.web.js"></script>
+    <link href="../../css/dx.spa.css" rel="stylesheet" />
+    <link href="../../css/dx.common.css" rel="stylesheet" />
+    <link href="../../css/dx.light.css" rel="stylesheet" />
+</head>
+    <body>
+        <div class="dx-field" style="margin-left: -500px;">
+            <div class="dx-field-value"><div id="simple" style="width: 20%;"></div></div>
+        </div>
+
+        <!--<div class="dx-fieldset form">
+                <div class="dx-field" style="width: 20%; float: left">
+                    <div class="dx-field-value"><div id="simple" style="width: 20%; float: left"></div></div>
+                </div>
+        
+                <div class="dx-field">
+                    <div class="dx-field-label"></div>
+                    <div class="dx-field-value">Selected Employee: <span id="selected-employee">none</span></div>
+                </div>
+            </div>-->
+    
+        <script>
+            var employeesList = ['Country(ML)', 'StateBook', 'MeasurementUnit', 'CountryRules'];
+
+            $("#simple").dxLookup({
+                items: employeesList,
+                cancelButtonText: "Close",
+                popupHeight: 350,
+                popupWidth: 200,
+                animation: {
+                    show: {
+                        type: "fade",
+                        duration: 400,
+                        from: 0.1,
+                        to: 1
+                    },
+                    hide: {
+                        type: "fade",
+                        duration: 400,
+                        from: 1,
+                        to: 0.1
+                    }
+                },
+                placeholder: "Other Tables",
+                onValueChanged: function (data) {
+                    $("#selected-employee").text(data.value);
+                }
+            });
+
+        </script>
+    </body>
+</html>

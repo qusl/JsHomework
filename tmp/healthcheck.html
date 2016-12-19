@@ -1,0 +1,252 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Health Check</title>
+    <link rel="stylesheet" href="/css/dx.common.css" />
+    <link rel="stylesheet" href="/css/tb.light.darkred.css" />
+    <script src="/lib/jquery/jquery-2.1.4.min.js"></script>
+    <script src="/lib/angular/angular.min.js"></script>
+    <script src="/scripts/app.initial.js?161101"></script>
+    <script src="/scripts/app.util.js?161102a"></script>
+    <script src="/scripts/app.service.helper.js?161101"></script>
+    <script src="/lib/devextreme/dx.web.js"></script>
+    <script src="/scripts/devextreme/mygridconfigForReport.js?161102"></script>
+    <link href="lib/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+    <script src="lib/sweetalert2/sweetalert2.min.js"></script>
+    <script src="scripts/dataconfig/TermsAndConditions/_termsAndConditionsPlanMapForHealthCheck.js?161102"></script>
+    <link href="css/reportStyles.css" rel="stylesheet" />
+</head>
+    <body ng-app="appHealthCheck" ng-controller="healthCheckController">
+        <div id="loading" class="hide">
+            <div id="loading-content">
+                <img src="images/loading.gif" />
+            </div>
+        </div>
+        
+        <div class="dx-field" style="margin-left: 16px; width: 420px; float:left;">
+            <div class="dx-field-value" style="width: 420px;">
+                <div id="resellerDropdown" style="width: 420px;"></div>
+            </div>
+        </div>
+
+        <div id="pageTitle" style="display: inline; margin-left: 50px; margin-right: 40px;"><b>TermConditionForPlan Health Check - Items Need to Sync</b></div>
+        <div id="ignorePlanCheckBox" style="margin: 10px;"> </div>
+        
+        <div class="main-content">
+            <div id="gridViewHealthCheck"></div>
+        </div>
+        <script>
+            var app = angular.module("appHealthCheck", []);
+            app.controller("healthCheckController", function ($scope, $http) {
+                $scope.checkboxValueChanged = checkboxValueChanged;
+                initialCheckbox($scope);
+                refreshGrid($scope, $http);
+            });
+
+            var refreshGrid = function (scope, myhttp) {
+                CmpToolUtility.showLoadingPage();
+                $(".dx-field").hide();
+                $("#pageTitle").hide();
+                $("#ignorePlanCheckBox").hide();
+                $("#dx-field").hide();
+                retrieveData(scope, myhttp);
+            };
+
+            var initialCheckbox = function (scope) {
+                $("#ignorePlanCheckBox").dxCheckBox({
+                    text: 'Ignore the Records that PlanID not Active in InternalPlans Table',
+                    value: false,
+                    onValueChanged: function (e) {
+                        scope.checkboxValueChanged(scope);
+                    }
+                });
+            }
+
+            var isChecked = false;
+            var checkboxValueChanged = function (scope) {
+                if (isChecked) {
+                    isChecked = false;
+                    scope.dataSource = scope.finalDataSource;
+                    refresh(scope);
+                } else {
+                    isChecked = true;
+                    scope.dataSource = removeInvalidPlans(scope);
+                    refresh(scope);
+                }
+            }
+
+            var refresh = function (scope) {
+                //CmpToolUtility.showLoadingPage();
+                var myGrid = angular.copy(window.CmpTool.myGridConfigForReport);
+                if (window.CmpTool.configTermsAndConditionsPlanMapForHealthCheckColumns) {
+                    refreshGridDetail(scope, myGrid);
+                } else {
+                    setTimeout(function () {
+                        refreshGridDetail(scope, myGrid);
+                    }, 500);
+                }
+            }
+
+            var removeInvalidPlans = function(scope) {
+                var src = scope.finalDataSource;
+                var plan = scope.internalPlansDropdown;
+                var planIds = [];
+                if (plan.length > 0) {
+                    for (var i = 0; i < plan.length; i ++) {
+                        planIds.push(plan[i].PlanID);
+                    }
+                }
+
+                var result = [];
+                var cnt = src.length;
+                if (cnt > 0) {
+                    for (var j = 0; j < cnt; j ++) {
+                        var planId = src[j].PlanID;
+                        if (planIds.indexOf(planId) > 0) {
+                            result.push(src[j]);
+                        }
+                    }
+                }
+                return result;
+            }
+
+            var showDropdownForResellerSelect = function (myscope, myhttp) {
+                var defaultValue = getDispNameByResellerId(myscope.resellerId, myscope.parentResellersDropdown);
+                if (myscope.resellerId === '0') {
+                    defaultValue = CmpToolStatic.allResellers;
+                }
+                $("#resellerDropdown").show();
+                $("#resellerDropdown").dxLookup({
+                    items: myscope.parentResellersDropdown,
+                    value: defaultValue,
+                    cancelButtonText: "Close",
+                    searchEnabled: false,
+                    showCancelButton: false,
+                    showPopupTitle: false,
+                    animation: {
+                        show: {
+                            type: "fade",
+                            duration: 400,
+                            from: 0.1,
+                            to: 1
+                        },
+                        hide: {
+                            type: "fade",
+                            duration: 400,
+                            from: 1,
+                            to: 0.1
+                        }
+                    },
+                    placeholder: "Select L1 Reseller",
+                    onValueChanged: function (data) {
+                        CmpToolUtility.showLoadingPage();
+                        myscope.resellerId = getResellerIdByDispName(data.value);
+                        localStorage.setItem("resellerIdForHealthCheck", myscope.resellerId);
+                        retrieveData(myscope, myhttp);
+                    }
+                });
+            }
+
+            var getDispNameForReseller = function (resellerData) {
+                var result = [];
+                var cnt = resellerData.length;
+                if (cnt > 0) {
+                    for (var i = 0; i < cnt; i++) {
+                        result.push(resellerData[i].DispName);
+                    }
+                }
+                return result;
+            }
+
+            var getDispNameByResellerId = function (resellerId, parentResellersDropdown) {
+                var cnt = parentResellersDropdown.length;
+                if (cnt > 0) {
+                    for (var i = 0; i < cnt; i ++) {
+                        if (parentResellersDropdown[i].includes(resellerId + '.')) {
+                            return parentResellersDropdown[i];
+                        }
+                    }
+                }
+                return '';
+            }
+
+            var getResellerIdByDispName = function(dispName) {
+                var pos = dispName.indexOf('.');
+                if (pos > 0) {
+                    return dispName.substring(0, pos);
+                } else {
+                    return 0;
+                }
+            }
+
+            retrieveData = function (scope, myhttp) {
+                var resellerId = localStorage.getItem("resellerIdForHealthCheck");
+                scope.resellerId = resellerId;
+                var userId = CmpToolUtility.getUserId();
+                if (userId === '') { return; }
+                scope.userId = userId;
+                var resellerTable = 'Resellers';
+                var resellerMethod = 'GetParentResellersForDropDown';
+                var fullUrl = CmpToolStatic.apiUrl + "Api/" + resellerTable + "/" + resellerMethod + "/";
+                window.CmpTool.ServiceHelper.getItem(myhttp, fullUrl).then(function (resellerResponse) {
+                    scope.parentResellersDropdownContainsResellerID = resellerResponse.data;
+                    var allResellesRow = {
+                        DispName: CmpToolStatic.allResellers,
+                        ResellerID: 0
+                    }
+                    resellerResponse.data.push(allResellesRow);
+                    scope.parentResellersDropdown = getDispNameForReseller(resellerResponse.data);
+                    showDropdownForResellerSelect(scope, myhttp, resellerId, userId);
+                    return retrieveTcData(scope, myhttp, resellerId, userId);
+                });
+            }
+
+            var retrieveTcData = function (scope, myhttp, resellerId, userId) {
+                var tcTable = CmpToolStatic.termsAndConditionsTableName;
+                var tcMethod = CmpToolStatic.termsAndConditionsGetMethod;
+                var fullUrl = CmpToolStatic.apiUrl + "Api/" + tcTable + "/" + tcMethod + "/";
+                fullUrl += resellerId + '?userId=' + userId;
+                window.CmpTool.ServiceHelper.getItem(myhttp, fullUrl).then(function (tcResponse) {
+                    scope.termsAndConditionsDropdown = tcResponse.data;
+                    return retrievePlanData(scope, myhttp, resellerId, userId);
+                });
+            }
+
+            var retrievePlanData = function (scope, myhttp, resellerId, userId) {
+                var planTable = CmpToolStatic.internalPlansTableName;
+                var planMethod = CmpToolStatic.internalPlansGetMethod;
+                var fullUrl = CmpToolStatic.apiUrl + "Api/" + planTable + "/" + planMethod + "/";
+                fullUrl += resellerId + '?userId=' + userId;
+                window.CmpTool.ServiceHelper.getItem(myhttp, fullUrl).then(function (planResponse) {
+                    scope.internalPlansDropdown = planResponse.data;
+                    return retrieveHealthCheck(scope, myhttp, resellerId, userId);
+                });
+            }
+
+            var retrieveHealthCheck = function (scope, myhttp, resellerId, userId) {
+                var tableName = "TermsAndConditionsPlanMap";
+                var getMethod = "HealthCheckByResellerId";
+                var fullUrl = CmpToolStatic.apiUrl + "Api/" + tableName + "/" + getMethod + "/";
+                fullUrl += resellerId + '?userId=' + userId;
+                window.CmpTool.ServiceHelper.getItem(myhttp, fullUrl).then(function (respRefresh) {
+                    scope.finalDataSource = respRefresh.data;
+                    scope.dataSource = scope.finalDataSource;
+                    refresh(scope);
+                });
+            }
+
+            var refreshGridDetail = function (scope, myGrid) {
+                myGrid.columns = window.CmpTool.configTermsAndConditionsPlanMapForHealthCheckColumns(scope);
+                myGrid.dataSource = scope.dataSource;
+                CmpToolUtility.refreshDataGrid($("#gridViewHealthCheck"), myGrid);
+                $(".dx-field").show();
+                $("#pageTitle").show();
+                $("#ignorePlanCheckBox").show();
+                $("#dx-field").show();
+                CmpToolUtility.hideLoadingPage();
+            }
+
+        </script>
+    </body>
+
+    </html>

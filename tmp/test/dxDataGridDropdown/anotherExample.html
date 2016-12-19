@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <title></title>
+        <style>
+            .treeviewDrill {
+                width: 400px;
+                height: 100%;
+                float: left;
+                overflow: scroll;
+                border: 1px solid #888;
+                margin-right: 20px;
+            }
+
+            .drillGrid {
+                margin-top: 20px;
+                margin-left: 420px;
+                border: 1px solid #777;
+            }
+
+            .dx-datagrid-addrow-button {
+                height: 40px;
+            }
+        </style>
+
+
+        <script src="../../lib/jquery/jquery-2.1.4.min.js"></script>
+        <script src="../../lib/jquery/globalize.min.js"></script>
+        <script src="../../lib/devextreme/dx.web.js"></script>
+
+
+        <link href="../../css/dx.common.css" rel="stylesheet" />
+        <link href="../../css/dx.light.css" rel="stylesheet" />
+    </head>
+
+<body>
+    <div class="form">
+        <div class="drillGrid" id="drillGrid"></div>
+    </div>
+
+
+    <script type="text/javascript">
+        var gDrillData = [{ "drillModel": { "drillTypeId": 1, "siteId": 1, "expectedRunDateTime": "2015-04-20T19:11:24", "actualDrillDateTime": null, "createDate": "2015-03-31T19:11:24", "deleteDate": null, "id": 1, "name": null, "type": "DrillModel", "parentId": 0 }, "drillCategoryName": "Man-made Disaster", "drillTypeName": "Lockdown/Active Shooter Drill", "drillRunDate": "4/20/2015", "drillCategoryId": 2, "ruleTypeId": 2 }, { "drillModel": { "drillTypeId": 1, "siteId": 1, "expectedRunDateTime": "2015-10-17T19:12:12.09", "actualDrillDateTime": null, "createDate": "2015-03-31T19:12:12.09", "deleteDate": null, "id": 2, "name": null, "type": "DrillModel", "parentId": 0 }, "drillCategoryName": "Man-made Disaster", "drillTypeName": "Lockdown/Active Shooter Drill", "drillRunDate": "10/17/2015", "drillCategoryId": 2, "ruleTypeId": 2 }, { "drillModel": { "drillTypeId": 2, "siteId": 1, "expectedRunDateTime": "2015-05-10T19:13:59.91", "actualDrillDateTime": null, "createDate": "2015-03-31T19:13:59.91", "deleteDate": null, "id": 3, "name": null, "type": "DrillModel", "parentId": 0 }, "drillCategoryName": "Man-made Disaster", "drillTypeName": "Bomb Threat Drill", "drillRunDate": "5/10/2015", "drillCategoryId": 2, "ruleTypeId": 2 }, { "drillModel": { "drillTypeId": 2, "siteId": 1, "expectedRunDateTime": "2015-11-16T19:13:59.927", "actualDrillDateTime": null, "createDate": "2015-03-31T19:13:59.927", "deleteDate": null, "id": 4, "name": null, "type": "DrillModel", "parentId": 0 }, "drillCategoryName": "Man-made Disaster", "drillTypeName": "Bomb Threat Drill", "drillRunDate": "11/16/2015", "drillCategoryId": 2, "ruleTypeId": 2 }, { "drillModel": { "drillTypeId": 4, "siteId": 1, "expectedRunDateTime": "2015-05-30T19:13:59.927", "actualDrillDateTime": null, "createDate": "2015-03-31T19:13:59.927", "deleteDate": null, "id": 5, "name": null, "type": "DrillModel", "parentId": 0 }, "drillCategoryName": "Natural Disaster", "drillTypeName": "Fire Drill", "drillRunDate": "5/30/2015", "drillCategoryId": 1, "ruleTypeId": 2 }, { "drillModel": { "drillTypeId": 4, "siteId": 1, "expectedRunDateTime": "2016-01-05T19:13:59.927", "actualDrillDateTime": null, "createDate": "2015-03-31T19:13:59.927", "deleteDate": null, "id": 6, "name": null, "type": "DrillModel", "parentId": 0 }, "drillCategoryName": "Natural Disaster", "drillTypeName": "Fire Drill", "drillRunDate": "1/5/2016", "drillCategoryId": 1, "ruleTypeId": 2 }, { "drillModel": { "drillTypeId": 5, "siteId": 1, "expectedRunDateTime": "2015-06-19T19:13:59.927", "actualDrillDateTime": null, "createDate": "2015-03-31T19:13:59.927", "deleteDate": null, "id": 7, "name": null, "type": "DrillModel", "parentId": 0 }, "drillCategoryName": "Natural Disaster", "drillTypeName": "Earthquake Drill", "drillRunDate": "6/19/2015", "drillCategoryId": 1, "ruleTypeId": 2 }, { "drillModel": { "drillTypeId": 5, "siteId": 1, "expectedRunDateTime": "2015-09-27T19:13:59.927", "actualDrillDateTime": null, "createDate": "2015-03-31T19:13:59.927", "deleteDate": null, "id": 8, "name": null, "type": "DrillModel", "parentId": 0 }, "drillCategoryName": "Natural Disaster", "drillTypeName": "Earthquake Drill", "drillRunDate": "9/27/2015", "drillCategoryId": 1, "ruleTypeId": 2 }, { "drillModel": { "drillTypeId": 5, "siteId": 1, "expectedRunDateTime": "2015-03-26T19:14:24.057", "actualDrillDateTime": null, "createDate": "2015-03-31T19:14:24.057", "deleteDate": null, "id": 9, "name": null, "type": "DrillModel", "parentId": 0 }, "drillCategoryName": "Natural Disaster", "drillTypeName": "Earthquake Drill", "drillRunDate": "3/26/2015", "drillCategoryId": 1, "ruleTypeId": 2 }]
+        var gDrillCategories = [{ clientId: 3, iconResourceId: null, id: 1, name: "Natural Disaster", type: "DrillCategoryModel", parentId: 0 }, { clientId: 3, iconResourceId: null, id: 2, name: "Man-made Disaster", type: "DrillCategoryModel", parentId: 0 }];
+        var gDrillTypes = [{ drillCategoryId: 2, ruleTypeId: 2, iconResourceId: null, id: 1, name: "Lockdown/Active Shooter Drill", type: "DrillTypeModel", parentId: 0 }, { drillCategoryId: 2, ruleTypeId: 2, iconResourceId: null, id: 2, name: "Bomb Threat Drill", type: "DrillTypeModel", parentId: 0 }, { drillCategoryId: 2, ruleTypeId: 2, iconResourceId: null, id: 3, name: "Shelter-In-Place Drill", type: "DrillTypeModel", parentId: 0 }, { drillCategoryId: 1, ruleTypeId: 2, iconResourceId: null, id: 4, name: "Fire Drill", type: "DrillTypeModel", parentId: 0 }, { drillCategoryId: 1, ruleTypeId: 2, iconResourceId: null, id: 5, name: "Earthquake Drill", type: "DrillTypeModel", parentId: 0 }, { drillCategoryId: 1, ruleTypeId: 2, iconResourceId: null, id: 6, name: "Tornado Drill", type: "DrillTypeModel", parentId: 0 }, { drillCategoryId: 1, ruleTypeId: 2, iconResourceId: null, id: 7, name: "Tsunamis Drill", type: "DrillTypeModel", parentId: 0 }, { drillCategoryId: 1, ruleTypeId: 2, iconResourceId: null, id: 8, name: "Wild Fire Drill", type: "DrillTypeModel", parentId: 0 }];
+
+        $(document).ready(function () {
+            window.isNewEdit = false;
+            $("#drillGrid").dxDataGrid({
+                dataSource: gDrillData,
+                paging: {
+                    enabled: false
+                },
+                editing: {
+                    editMode: "row",
+                    editEnabled: true,
+                    removeEnabled: true,
+                    insertEnabled: true
+                },
+                columns: [
+                    {
+                        activeStateEnabled: false,
+                        dataField: "drillCategoryId",
+                        caption: "Drill Category",
+                        width: 180,
+                        changed: function () {
+                            alert("ChangeOfDrillCat");
+                        },
+                        lookup: {
+                            dataSource: gDrillCategories,
+                            displayExpr: "name",
+                            valueExpr: "id"
+                        }
+                    },
+                    {
+                        dataField: "drillModel.drillTypeId",
+                        caption: "Drill Type",
+                        width: 150,
+                        lookup: {
+                            dataSource: gDrillTypes,
+                            displayExpr: "name",
+                            valueExpr: "id"
+                        }
+                    },
+                    {
+                        dataField: "drillRunDate",
+                        dataType: "date",
+                        width: 125
+                    }
+                ],
+
+                onEditingStart: function (e) {
+                    window.isNewEdit = true;
+                },
+
+                onCellPrepared: function (e) {
+                    var cellElement = e.cellElement,
+                        editorElement = cellElement.find(".dx-selectbox"),
+                        category,
+                        selectBox = editorElement.data("dxSelectBox");
+                    if (e.rowType === "data") {
+                        category = e.data.drillCategoryId;
+                        if (selectBox && e.column.dataField === "drillModel.drillTypeId" && category && window.isNewEdit) {
+                            var items = selectBox.option("items");
+                            selectBox.option({
+                                dataSource: {
+                                    store: items,
+                                    filter: [["drillCategoryId", "=", category]]
+                                },
+                                value: e.value
+                            });
+                            window.isNewEdit = false;
+                        }
+                        if (e.column.dataField === "drillCategoryId") {
+                            selectBox = cellElement.find(".dx-selectbox").data("dxSelectBox");
+                            selectBox && selectBox.on("valueChanged", function (args) {
+                                var cell = e.component.getCellElement(e.rowIndex, "drillModel.drillTypeId"),
+                                    selectBox = cell.find(".dx-selectbox").data("dxSelectBox");
+                                if (selectBox) {
+                                    var items = selectBox.option("dataSource.store") || selectBox.option("items");
+                                    selectBox.option("dataSource", {
+                                        store: items,
+                                        filter: [["drillCategoryId", "=", args.value]]
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }
+
+
+            });
+
+        });
+
+    </script>
+</body>
+</html>

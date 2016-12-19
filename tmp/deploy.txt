@@ -1,0 +1,141 @@
+﻿
+                                   Deploy Instructions
+
+
+
+1. change these in scripts/app.initial.js file.
+
+	* myInitial.currentHub
+	* myInitial.isDeployed: change to true
+	* myInitial.wsUrl
+
+2. change version number in index.html: urlArgs: "bust=v160810",
+
+   change the js version in login.html file if needed.
+
+3. add web.config file: (need to install 'Application Request Routing 3' and 'URL Rewrite 2' using Web Platform Installer for IIS)
+
+  <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <system.webServer>
+        <rewrite>
+            <rules>
+                <rule name="ReverseProxyInboundRule1" stopProcessing="true">
+                    <match url="AutomationApi/api/(.*)" />
+                    <action type="Rewrite" url="http://10.4.7.41/AutomationApi/api/{R:1}" appendQueryString="true" logRewrittenUrl="true" />
+                </rule>
+                <!--<rule name="article rewrite">
+                    <match url="^article/([0-9]+)/([_0-9a-z-]+)" />
+                    <action type="Rewrite" url="article.aspx?id={R:1}&amp;title={R:2}" logRewrittenUrl="true" />
+                </rule>-->
+            </rules>
+        </rewrite>
+        <tracing>
+            <traceFailedRequests>
+                <add path="*">
+                    <traceAreas>
+                        <add provider="ASP" verbosity="Verbose" />
+                        <add provider="ASPNET" areas="Infrastructure,Module,Page,AppServices" verbosity="Verbose" />
+                        <add provider="ISAPI Extension" verbosity="Verbose" />
+                        <add provider="WWW Server" areas="Authentication,Security,Filter,StaticFile,CGI,Compression,Cache,RequestNotifications,Module,FastCGI,WebSocket,Rewrite,RequestRouting" verbosity="Verbose" />
+                    </traceAreas>
+                    <failureDefinitions statusCodes="404" />
+                </add>
+            </traceFailedRequests>
+        </tracing>
+    </system.webServer>
+</configuration>
+
+ -- Note the http:// prefix in the rewrite rule action. That is what indicates that this request must be proxy’ed, instead of being rewritten. 
+ When rule has “Rewrite” action with the URL that contains the protocol prefix, then URL Rewrite Module will not perform its standard URL rewriting logic. 
+ Instead it will pass the request to Application Request Routing module, which will proxy that request to the URL specified in the rule.
+
+ -- IIS configuration on 10.4.7.63:  (same with InternalDashboard)
+     IP Address: 10.4.64.11
+	 Host name: cmptool.dev.internal.cloud.im
+(it's working for ther URL Rewrite after adding 'Failed Request Tracing Rules' even it's not enabled)
+
+4. "Build" before view index.html (to generate 'all.min.js file', we can check the status in View -> Other Windows -> Task Runner Explore), or double click 'uglifyscripts' task to generate 'all.min.js' file. 
+
+
+>> AutomationApi Deploy:
+
+1. Web.config file:
+
+    1) EntLib.config 
+	  a. file path
+	  b. ImLogging database connection string (not on Dev)
+
+    2) Custom Headers -> Access-Control-Allow-Origin:
+
+	    <add name="Access-Control-Allow-Origin" value="http://10.4.64.11" />
+
+	[don't need this]3) Change "ClientUrl". (for example, on Dev: https://cmptool.dev.internal.cloud.im/login.html)
+
+
+
+
+
+>> DB cleanup:
+
+  1) delete all record in InternalPlansML but the PlanID is not in InternalPlans table (same for InternalResourcesMap table)
+
+>> Authentication:
+
+  Don't allow anyone to call http://localhost:1592/api/PlanNumAggregator/DeleteApi/196
+
+
+>> clean up ML tables:
+
+delete InternalPlansML where PlanID not in
+(
+	select PlanID from InternalPlans
+)
+
+delete InternalResourcesMapML where ResourceID not in
+(
+	select resourceID from InternalResourcesMap
+)
+
+... same with other ML tables.
+
+
+CREATE FUNCTION StringSplit
+(    
+      @Input NVARCHAR(MAX),
+      @Character CHAR(1)
+)
+RETURNS @Output TABLE (
+      Item NVARCHAR(1000)
+)
+AS
+BEGIN
+      DECLARE @StartIndex INT, @EndIndex INT
+ 
+      SET @StartIndex = 1
+      IF SUBSTRING(@Input, LEN(@Input) - 1, LEN(@Input)) <> @Character
+      BEGIN
+            SET @Input = @Input + @Character
+      END
+ 
+      WHILE CHARINDEX(@Character, @Input) > 0
+      BEGIN
+            SET @EndIndex = CHARINDEX(@Character, @Input)
+           
+            INSERT INTO @Output(Item)
+            SELECT SUBSTRING(@Input, @StartIndex, @EndIndex - 1)
+           
+            SET @Input = SUBSTRING(@Input, @EndIndex + 1, LEN(@Input))
+      END
+ 
+      RETURN
+END
+GO
+
+
+
+
+
+	>> New changes for next deployment:
+	1. added primary key for CountryRules table.
+	2. added primary key for ResourceCategoryMap table.

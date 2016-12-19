@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="crm/src/XMLDisplay.js"> </script>
+    <link href="crm/src/XMLDisplay.css" rel="stylesheet" />
+	<meta charset="utf-8" />
+    <script>
+        setTimeout(function(){
+          LoadXML('XMLHolder', test.xml);
+        }, 300);
+        
+    </script>
+</head>
+<body>
+    <div id="XMLHolder"></div>    
+</body>
+</html>
+
+
+
+<!--<script type="text/javascript">
+    $(document).ready(function () {
+    event.preventDefault();
+
+    function json1(id,name){
+    this.id = id;
+    this.name = name;
+    }
+
+    id_list = Array();
+    id_list.push(new json1("1","TEST_1"));
+    id_list.push(new json1("2","TEST_2"));
+    id_list.push(new json1("3","TEST_3"));
+    id_list.push(new json1("4","TEST_4"));
+    id_list.push(new json1("5", "TEST_5"));
+
+    id_list = JSON.stringify(id_list);
+    document.write(id_list);
+    });
+
+    //$(document).ready(function () {
+    //    function random(response) {
+    //        console.log("Request handler random was called.");
+    //        response.writeHead(200, { "Content-Type": "application/json" });
+    //        var otherArray = ["item1", "item2"];
+    //        var otherObject = { item1: "item1val", item2: "item2val" };
+    //        var json = JSON.stringify({
+    //            anObject: otherObject,
+    //            anArray: otherArray,
+    //            another: "item"
+    //        });
+    //        response.end(json);
+    //    }
+    //});
+
+</script>-->

@@ -1,0 +1,536 @@
+﻿
+(function() {
+    var util = {};
+    util.SCROLL_X = 0;
+    util.SCROLL_Y = 0;
+    util.UNDEF = 'undefined';
+    util.HID = 'hidden';
+    util.VIS = 'visible';
+    util.ABS = 'absolute';
+    util.FIX = 'fixed';
+    util.REL = 'relative';
+    util.STA = 'static';
+    util.INH = 'inherit';
+    util.TP = 'top';
+    util.BM = 'bottom';
+    util.LT = 'left';
+    util.RT = 'right';
+    var browser = '';
+    util.navCheck = function(check) {
+        return navigator.userAgent.indexOf(check) != -1;
+    }
+    if (document.all) browser = 'IE';
+    else if (util.opera) browser = 'Opera';
+    else if (util.navCheck('Chrome')) browser = 'Chrome';
+    else if (util.navCheck('iPod')) browser = 'iPod';
+    else if(util.navCheck('iPhone')) browser = 'iPhone';
+    else if (util.navCheck('iPad')) browser = 'iPad';
+    else if (util.navCheck('Android')) browser = 'Android';
+    else if (util.navCheck('Safari')) browser = 'Safari';
+    else if (util.navCheck('Gecko')) browser = 'Firefox';
+    else browser = 'UNKNOWN';
+    util.BROWSER = browser;
+
+    util.O = function(id, property, value) {
+        if (id instanceof Array) {
+            var tmp = [];
+            for (var j = 0; j < id.length; ++j)
+                tmp.push(util.O(id[j], property, value));
+            return tmp;
+        }
+
+        if (typeof property != util.UNDEF && typeof value != util.UNDEF) {
+            if (typeof value == 'string') value = "'" + value + "'";
+            if (typeof id == 'object') return eval(id.property = value);
+            else return eval("util.O('" +id + "')." + property + " = " +value);
+        }
+
+        if (typeof id == 'object') return id;
+        else {
+            try {
+                return document.getElementById(id);
+            } catch (e) {
+                alert('Unknown ID: ' + id);
+            }
+        }
+    }
+
+    util.S = function(id, property, value) {
+        if (id instanceof Array) {
+            var tmp = [];
+            for (var j = 0; j < id.length; ++j)
+                tmp.push(util.S(id[j], property, value));
+            return tmp;
+        }
+
+        if (typeof property != util.UNDEF && typeof value != util.UNDEF) {
+            try {
+                return util.O(id).style[property]= value;
+            } catch (e) {
+                alert('Unknown ID: ' + id);
+            }
+        } else if (typeof id == 'object') return id.style;
+        else {
+            try {
+                return util.O(id).style;
+            } catch (e) {
+                alert('Unknown ID: ' + id);
+            }
+        }
+    }
+
+    util.NoPx = function(value) {
+        return value.replace(/px/, '') * 1;
+    }
+
+    util.Px = function(value) {
+        return value + 'px';
+    }
+
+    util.ResizeWidth = function(id, width) {
+        util.S(id, 'overflow', util.HID);
+        util.S(id, 'width', util.Px(width));
+    }
+
+    util.ResizeHeight = function(id, height) {
+        util.S(id, 'overflow', util.HID);
+        util.S(id, 'height', util.Px(height));
+    }
+
+    util.Resize = function(id, width, height) {
+        util.ResizeWidth(id, width);
+        util.ResizeHeight(id, height);
+    }
+
+    util.Position = function(id, type) {
+        util.S(id, 'position', type);
+    }
+
+    util.GetWindowWidth = function() {
+        var de = document.documentElement;
+
+        if (util.BROWSER != 'IE') {
+            var barwidth = de.scrollHeight > de.clientHeight ? 17 : 0;
+            return window.innerWidth - barwidth;
+        }
+
+        return de.clientWidth || document.body.clientWidth;
+    }
+
+    util.GetWindowHeight = function() {
+        var de = document.documentElement;
+
+        if (util.BROWSER != 'IE') {
+            var barwidth = de.scrollWidth > de.clientWidth ? 17 : 0;
+            return window.innerHeight - barwidth;
+        }
+
+        return de.clientHeight || document.body.clientHeight;
+    }
+
+    util.W = function(id) {
+        var width = util.O(id).offsetWidth +
+            util.NoPx(util.S(id).marginLeft) +
+            util.NoPx(util.S(id).marginRight);
+
+        var bord = util.NoPx(util.S(id).borderLeftWidth) +
+            util.NoPx(util.S(id).borderRightWidth);
+
+        if (bord > 0) width -= bord;
+        else if (util.O(id).border) width -= util.O(id).border * 2;
+
+        return width;
+    }
+
+    util.H = function(id) {
+        var height = util.O(id).offsetHeight +
+            util.NoPx(util.S(id).marginTop) +
+            util.NoPx(util.S(id).marginBottom);
+
+        var bord = util.NoPx(util.S(id).borderTopWidth) +
+            util.NoPx(util.S(id).borderBottomWidth);
+
+        if (bord > 0) height -= bord;
+        else if (util.O(id).border) height -= util.O(id).border * 2;
+
+        return height;
+    }
+
+    util.CenterX = function(id) {
+        if (id instanceof Array) {
+            for (var j = 0; j < id.length; ++j)
+                CenterX(id[j]);
+            return;
+        }
+        util.S(id).left = util.Px(Math.round((util.GetWindowWidth() - util.W(id))) / 2 +util.SCROLL_X);
+    }
+
+    util.CenterY = function(id) {
+        if (id instanceof Array) {
+            for (var j = 0; j < id.length; ++j)
+                CenterY(id[j]);
+            return;
+        }
+        util.S(id).top = util.Px(Math.round((util.GetWindowHeight() - util.H(id))) / 2 + util.SCROLL_Y);
+    }
+
+    util.Center = function(id) {
+        util.CenterX(id);
+        util.CenterY(id);
+    }
+
+    util.GoTo = function(id, x, y) {
+        util.S(id, 'left', util.Px(x));
+        util.S(id, 'top', util.Px(y));
+    }
+
+    util.InsVars = function() {
+        var tmp = arguments[0];
+
+        for (var j = 1; j < arguments.length; ++j)
+            tmp = tmp.replace(new RegExp('#' + j, 'g'), arguments[j]);
+        return tmp;
+    }
+
+    util.Opacity = function(id, percent) {
+        util.S(id, 'opacity', percent / 100);
+        util.S(id, 'MozOpacity', percent / 100);
+        util.S(id, 'KhtmlOpacity', percent / 100);
+        util.S(id, 'filter', util.InsVars("alpha(opacity = '#1')", percent));
+    }
+
+    util.X = function(id) {
+        var obj = util.O(id);
+        var offset = obj.offsetLeft;
+
+        if (obj.offsetParent)
+            while (obj = obj.offsetParent)
+                offset += obj.offsetLeft;
+        return offset;
+    }
+
+    util.Y = function(id) {
+        var obj = util.O(id);
+        var offset = obj.offsetTop;
+
+        if (obj.offsetParent)
+            while (obj = obj.offsetParent)
+                offset += obj.offsetTop;
+        return offset;
+    }
+
+    util.Invisible = function(id) {
+        util.S(id, 'visibility', util.HID);
+    }
+
+    util.Visible = function(id) {
+        util.S(id, 'visibility', util.VIS);
+    }
+
+    util.Html = function(id, value) {
+        if (typeof value != util.UNDEF)
+            util.O(id).innerHTML = value;
+        return util.O(id).innerHTML;
+    }
+
+    var alertHide = function(divs) {
+        util.Invisible(divs);
+    };
+
+    window.Alert = function(value) {
+        var abs = 'absolute';
+        var divs = Array('ALERT_DIV', 'SHADOW_DIV');
+        var warn = "<font color=green size=6 style='vertical-align:middle;'>" +
+            "&#916;</font>&nbsp;";
+        var ok = "<center><input id='ALERT_OK' type='submit' /></center>";
+        var mess = warn + value + '<br><br>' + ok;
+        var html = "<div id='ALERT_TITLE'></div>" +
+            "<div id='ALERT_MESSAGE'></div>";
+
+        try {
+            $("#ALERT_DIV").remove();
+        }
+        catch (e) { }
+        if (!util.O('ALERT_DIV')) {
+            var newdiv = document.createElement('div');
+            newdiv.id = 'SHADOW_DIV';
+            document.body.appendChild(newdiv);
+            newdiv = document.createElement('div');
+            newdiv.id = 'ALERT_DIV';
+            document.body.appendChild(newdiv);
+            util.Position(divs, abs);
+            util.Resize('ALERT_DIV', 400, 145);
+            util.Resize('SHADOW_DIV', 404, 151);
+            util.Center('ALERT_DIV');
+            util.GoTo('SHADOW_DIV', util.X('ALERT_DIV') +4, util.Y('ALERT_DIV') +6);
+            util.Opacity('SHADOW_DIV', 50);
+        }
+
+        alertHide(divs);
+        util.Html('ALERT_DIV', html);
+        util.Resize('ALERT_TITLE', 400, 22);
+        util.Resize('ALERT_MESSAGE', 380, 125);
+        util.Html('ALERT_TITLE', 'CMP Tool Message');
+        util.Html('ALERT_MESSAGE', mess);
+
+        util.S('ALERT_TITLE').background = '#acc5e0';
+        util.S('ALERT_TITLE').fontFamily = 'Arial';
+        util.S('ALERT_TITLE').paddingTop = '2px';
+        util.S('ALERT_TITLE').textAlign = 'center';
+        util.S('ALERT_TITLE').fontSize = '14px';
+        util.S('ALERT_MESSAGE').fontFamily = 'Arial';
+        util.S('ALERT_MESSAGE').fontSize = '12px';
+        util.S('ALERT_MESSAGE').padding = '10px';
+        util.S('ALERT_MESSAGE').overflow = 'auto';
+        util.S('ALERT_DIV').background = '#f0f0f0';
+        util.S('ALERT_DIV').border = 'solid #444444 1px';
+
+        util.S('ALERT_DIV')["z-index"] = 101;
+
+        util.S('SHADOW_DIV').background = '#444444';
+        util.O('ALERT_OK').value = '      OK      ';
+
+        util.O('ALERT_OK').onclick = function() {
+            alertHide(divs);
+        }
+        util.Visible(divs);
+    }
+
+    window.AlertError = function (value, handlingInstanceId) {
+        var abs = 'absolute';
+        var divs = Array('ALERT_DIV_ERR', 'SHADOW_DIV_ERR');
+        var warn = "<font color=red size=6 style='vertical-align:middle;'>" +
+            "&#916;</font>&nbsp;";
+        var ok = "<center><input id='ALERT_OK_ERR' type='submit' /></center>";
+        var mess = warn + '<b>' + value + '</b>' + '<br>';
+        
+        if (handlingInstanceId) {
+            mess += 'HandlingInstanceId: ';
+            mess += "<a href=" + CmpToolStatic.errUrl + handlingInstanceId + " target='_blank'>" + handlingInstanceId + "</a>";
+            mess += '<br><br>';
+        }
+        mess += '<br>' + ok;
+        var html = "<div id='ALERT_TITLE_ERR'></div>" +
+            "<div id='ALERT_MESSAGE_ERR'></div>";
+        try {
+            $("#ALERT_DIV_ERR").remove();
+        }
+        catch (e){ }
+        if (!util.O('ALERT_DIV_ERR')) {
+            var newdiv = document.createElement('div');
+            newdiv.id = 'SHADOW_DIV_ERR';
+            document.body.appendChild(newdiv);
+            newdiv = document.createElement('div');
+            newdiv.id = 'ALERT_DIV_ERR';
+            document.body.appendChild(newdiv);
+            util.Position(divs, abs);
+            
+            if (handlingInstanceId) {
+                util.Resize('ALERT_DIV_ERR', 405, 175);
+                util.Resize('SHADOW_DIV_ERR', 409, 181);
+            } else {
+                util.Resize('ALERT_DIV_ERR', 400, 145);
+                util.Resize('SHADOW_DIV_ERR', 404, 151);
+            }
+            util.Center('ALERT_DIV_ERR');
+            util.GoTo('SHADOW_DIV_ERR', util.X('ALERT_DIV_ERR') +4, util.Y('ALERT_DIV_ERR') +6);
+            util.Opacity('SHADOW_DIV_ERR', 50);
+        }
+
+        alertHide(divs);
+        util.Html('ALERT_DIV_ERR', html);
+        util.Resize('ALERT_TITLE_ERR', 405, 22);
+        if (handlingInstanceId) {
+            util.Resize('ALERT_MESSAGE_ERR', 385, 140);
+        } else {
+            util.Resize('ALERT_MESSAGE_ERR', 380, 125);
+        }
+        util.Html('ALERT_TITLE_ERR', 'CMP Tool Error');
+        util.Html('ALERT_MESSAGE_ERR', mess);
+
+        util.S('ALERT_TITLE_ERR').background = '#acc5e0';
+        util.S('ALERT_TITLE_ERR').fontFamily = 'Arial';
+        util.S('ALERT_TITLE_ERR').paddingTop = '2px';
+        util.S('ALERT_TITLE_ERR').textAlign = 'center';
+        util.S('ALERT_TITLE_ERR').fontSize = '14px';
+        util.S('ALERT_MESSAGE_ERR').fontFamily = 'Arial';
+        util.S('ALERT_MESSAGE_ERR').fontSize = '12px';
+        util.S('ALERT_MESSAGE_ERR').padding = '10px';
+        util.S('ALERT_MESSAGE_ERR').overflow = 'auto';
+        util.S('ALERT_DIV_ERR').background = '#f0f0f0';
+        util.S('ALERT_DIV_ERR').border = 'solid #444444 1px';
+
+        util.S('ALERT_DIV_ERR')["z-index"] = 101;
+
+        util.S('SHADOW_DIV_ERR').background = '#444444';
+        util.O('ALERT_OK_ERR').value = '      OK      ';
+
+        util.O('ALERT_OK_ERR').onclick = function() {
+            alertHide(divs);
+        }
+        util.Visible(divs);
+    }
+
+    window.AlertErrorText = function (value, errLinkTxt) {
+        var abs = 'absolute';
+        var divs = Array('ALERT_DIV_ERR', 'SHADOW_DIV_ERR');
+        var warn = "<font color=red size=6 style='vertical-align:middle;'>" +
+            "&#916;</font>&nbsp;";
+        var ok = "<center><input id='ALERT_OK_ERR' type='submit' /></center>";
+        var mess = warn + '<b>' + value + '</b>' + '<br>';
+
+        mess += "<a style='margin-left: 30px' href=" + CmpToolStatic.errLocalUrl + " target='_blank'>" + errLinkTxt + "</a>";
+        mess += '<br><br>';
+        
+        mess += '<br>' + ok;
+        var html = "<div id='ALERT_TITLE_ERR'></div>" +
+            "<div id='ALERT_MESSAGE_ERR'></div>";
+        try {
+            $("#ALERT_DIV_ERR").remove();
+        }
+        catch (e) { }
+        if (!util.O('ALERT_DIV_ERR')) {
+            var newdiv = document.createElement('div');
+            newdiv.id = 'SHADOW_DIV_ERR';
+            document.body.appendChild(newdiv);
+            newdiv = document.createElement('div');
+            newdiv.id = 'ALERT_DIV_ERR';
+            document.body.appendChild(newdiv);
+            util.Position(divs, abs);
+
+            if (errLinkTxt) {
+                util.Resize('ALERT_DIV_ERR', 405, 175);
+                util.Resize('SHADOW_DIV_ERR', 409, 181);
+            } else {
+                util.Resize('ALERT_DIV_ERR', 400, 145);
+                util.Resize('SHADOW_DIV_ERR', 404, 151);
+            }
+            util.Center('ALERT_DIV_ERR');
+            util.GoTo('SHADOW_DIV_ERR', util.X('ALERT_DIV_ERR') + 4, util.Y('ALERT_DIV_ERR') + 6);
+            util.Opacity('SHADOW_DIV_ERR', 50);
+        }
+
+        alertHide(divs);
+        util.Html('ALERT_DIV_ERR', html);
+        util.Resize('ALERT_TITLE_ERR',405, 22);
+        if (errLinkTxt) {
+            util.Resize('ALERT_MESSAGE_ERR', 385, 140);
+        } else {
+            util.Resize('ALERT_MESSAGE_ERR', 380, 125);
+        }
+        util.Html('ALERT_TITLE_ERR', 'CMP Tool Error');
+        util.Html('ALERT_MESSAGE_ERR', mess);
+
+        util.S('ALERT_TITLE_ERR').background = '#acc5e0';
+        util.S('ALERT_TITLE_ERR').fontFamily = 'Arial';
+        util.S('ALERT_TITLE_ERR').paddingTop = '2px';
+        util.S('ALERT_TITLE_ERR').textAlign = 'center';
+        util.S('ALERT_TITLE_ERR').fontSize = '14px';
+        util.S('ALERT_MESSAGE_ERR').fontFamily = 'Arial';
+        util.S('ALERT_MESSAGE_ERR').fontSize = '12px';
+        util.S('ALERT_MESSAGE_ERR').padding = '10px';
+        util.S('ALERT_MESSAGE_ERR').overflow = 'auto';
+        util.S('ALERT_DIV_ERR').background = '#f0f0f0';
+        util.S('ALERT_DIV_ERR').border = 'solid #444444 1px';
+
+        util.S('ALERT_DIV_ERR')["z-index"] = 101;
+
+        util.S('SHADOW_DIV_ERR').background = '#444444';
+        util.O('ALERT_OK_ERR').value = '      OK      ';
+
+        util.O('ALERT_OK_ERR').onclick = function () {
+            alertHide(divs);
+        }
+        util.Visible(divs);
+    }
+
+    window.Session = Session || (function () {
+
+        // window object
+        var win = window.top || window;
+
+        // session store
+        var store = (win.name ? JSON.parse(win.name) : {});
+
+        // save store on page unload
+        function Save() {
+            win.name = JSON.stringify(store);
+        };
+
+        // page unload event
+        if (window.addEventListener) window.addEventListener("unload", Save, false);
+        else if (window.attachEvent) window.attachEvent("onunload", Save);
+        else window.onunload = Save;
+
+        // public methods
+        return {
+
+            // set a session variable
+            set: function (name, value) {
+                store[name] = value;
+            },
+
+            // get a session value
+            get: function (name) {
+                return (store[name] ? store[name] : undefined);
+            },
+
+            // clear session
+            clear: function () { store = {}; },
+
+            // dump session data
+            dump: function () { return JSON.stringify(store); }
+
+        };
+
+    })();
+
+    window.myUtil = util;
+})();
+
+
+
+
+
+
+
+if (JSON && JSON.stringify && JSON.parse) var Session = Session || (function () {
+
+    // window object
+    var win = window.top || window;
+
+    // session store
+    var store = (win.name ? JSON.parse(win.name) : {});
+
+    // save store on page unload
+    function Save() {
+        win.name = JSON.stringify(store);
+    };
+
+    // page unload event
+    if (window.addEventListener) window.addEventListener("unload", Save, false);
+    else if (window.attachEvent) window.attachEvent("onunload", Save);
+    else window.onunload = Save;
+
+    // public methods
+    return {
+
+        // set a session variable
+        set: function (name, value) {
+            store[name] = value;
+        },
+
+        // get a session value
+        get: function (name) {
+            return (store[name] ? store[name] : undefined);
+        },
+
+        // clear session
+        clear: function () { store = {}; },
+
+        // dump session data
+        dump: function () { return JSON.stringify(store); }
+
+    };
+
+})();

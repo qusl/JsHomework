@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title></title>
+        <link href="../../lib/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+        <script src="../../lib/sweetalert2/sweetalert2.min.js"></script>
+        <script src="../../lib/jquery/jquery-2.1.4.min.js"></script>
+        <script src="../../lib/angular/angular.min.js"></script>
+        <script src="../../scripts/app.initial.js"></script>
+        <script src="../../scripts/app.util.js"></script>
+        <script src="../../scripts/app.service.helper.js"></script>
+        <script src="../../lib/ckeditor/ckeditor.js"></script>
+        <script src="../../lib/ckeditor/styles.js"></script>
+        <script src="../../lib/ckeditor/sample.js"></script>
+        <link href="../../lib/toastr/toastr.min.css" rel="stylesheet" />
+        <script src="../../lib/toastr/toastr.min.js"></script>
+    </head>
+
+    <body ng-app="appHtml" ng-controller="HttpController">
+        <div style="text-align:center">DisplayPlans - ShortDescription Editor</div>
+        <br />
+        <textarea name="editor1" id="editor1" rows="0" cols="0" style="display:none"></textarea>
+        <br />
+        <div id="footerdiv" style="display:none">
+            <b>PlanId:</b> <label id="catid"></label>
+            &nbsp;&nbsp;
+            <b>PlanName:</b><label id="catname"></label>
+            &nbsp;&nbsp;
+            <input type="button" value="Save" ng-click="saveHtml()" />
+        </div>
+
+        <script>
+            var app = angular.module("appHtml", []);
+            app.controller("HttpController", function ($scope, $http) {
+                var fullUrl = CmpToolStatic.apiUrl + "Api/DisplayPlans/UpdateShortDescHtml" + "/";
+                $scope.saveHtml = function () {
+                    CmpToolUtility.showLoadingPage();
+                    var editorResult = '';
+                    $('body').find("iframe").each(function () {
+                        var ifrm = this;
+                        var doc = ifrm.contentDocument ? ifrm.contentDocument : ifrm.contentWindow.document;
+                        editorResult = doc.body.innerHTML;
+                    });
+                    var planId = localStorage.getItem("displayPlans_shortDesc_planId");
+                    var data = {
+                        PlanID: planId,
+                        ShortDescription: editorResult
+                    };
+                    var keyName = "PlanID";
+                    window.CmpTool.ServiceHelper.updateItem($http, fullUrl, data, keyName);
+                    localStorage.setItem("displayPlans_shortDescription", editorResult);
+                };
+            });
+
+            $(document).ready(function() {
+                setTimeout(function() {
+                    CKEDITOR.replace('editor1');
+                    var editor = document.getElementById('editor1');
+                    var text = localStorage.getItem("displayPlans_shortDescription");
+                    if (!text || text === 'null') text = '';
+                    editor.innerHTML = text;
+                    var catId = localStorage.getItem("displayPlans_shortDesc_planId");
+                    var catName = localStorage.getItem("displayPlans_shortDesc_planName");
+                    $('#footerdiv').show();
+                    $('#catid').html(catId);
+                    $('#catname').html(catName);
+                }, 1000);
+            });
+        </script>
+
+    </body>
+</html>

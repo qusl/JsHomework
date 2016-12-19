@@ -1,0 +1,48 @@
+﻿
+<li class="mega-menu-content">
+    <div class="row">
+        <div class="col-md-9 internalcol">
+            <div class="sectiontitle">
+                <span ng-bind="'Cloud Marketplace Solutions - ' + (myservice.marketplace)"></span>
+                <span class="desc push-left-10 hidden-xs">
+                    <label id="categoryname"></label> 
+                    <label id="categoryid"></label>
+                    <a id="showall" style="display:none; padding-left: 2px;" href="#" ng-click="showall()">Show All</a>
+                </span>
+            </div>
+            <div class="row">
+                <div ng-repeat="categories in myservice.displayCategories">
+                    <div class="col-md-4">
+                        <ul class="mega-menu-submenu" ng-repeat="category in categories">
+                            <li><p ng-bind="category.CategoryName"></p></li>
+                            <li ng-repeat="subcat in category.SubCategories">
+                                <a href="#" 
+                                   ng-click="myservice.loadFromMegamenu(subcat.CategoryId, subcat.CategoryName)" 
+                                   ng-if="subCat.IsPublic = true"
+                                   ng-bind="subcat.CategoryName">
+                                </a>
+                                <a href="#"
+                                   ng-click="myservice.loadFromMegamenu(subcat.CategoryId, subcat.CategoryName)"
+                                   ng-if="subCat.IsPublic != true">
+                                    <label style="color: red" ng-bind="'[Internal Only]' + (subcat.CategoryName)"></label>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="sectiontitle">
+                <span>All Cloud Services</span>
+            </div>
+            <div class="row" ng-repeat="site in myservice.externalSites">
+                <div class="col-md-12">
+                    <ul class="mega-menu-submenu">
+                        <li><a href="#" ng-click="" ng-bind-html="site.Title | trustAsHtml"></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</li>

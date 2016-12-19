@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="../../css/dx.common.css" rel="stylesheet" />
+    <link href="../../css/dx.light.css" rel="stylesheet" />
+    <script src="../../lib/jquery/jquery-2.2.3.min.js"></script>
+    <script src="globalize.min.js"></script>
+    <script src="../../lib/devextreme/dx.web.js"></script>
+    <script>
+        var array = new Array();
+        $(function () {
+
+            for (var i = 0; i < 50; i++) {
+                array.push({ id: i, name: "Name " + i, description: "Description " + i, modelDate: new Date(), state: i % 2 == 0 ? 1 : 0 });
+            }
+
+            $("#gridContainer").dxDataGrid({
+                dataSource: {
+                    store: {
+                        type: 'array',
+                        key: 'id',
+                        data: array
+                    }
+                },
+
+                onEditorPrepared: function (e) {
+                    if (e.dataField == "name") {
+                        $(e.editorElement).dxTextBox("instance").on("valueChanged", function (args) {
+                            console.log(args.value);
+                            var grid = $("#gridContainer").dxDataGrid("instance");
+                            var index = e.row.rowIndex;
+                            var result = "new description " + args.value;
+                            grid.cellValue(index, "description", result);
+                        });
+                    }
+                },
+                allowColumnReordering: true,
+                allowColumnResizing: true,
+                filterRow: {
+                    visible: true
+                },
+                groupPanel: {
+                    visible: true
+                },
+                paging: {
+                    pageSize: 10
+                },
+
+                pager: {
+
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [5, 10, 20]
+                },
+                editing: {
+                    allowUpdating: true,
+                    allowAdding: true,
+                    mode: 'batch'
+                },
+                columns: [{
+                    dataField: "id"
+                },
+
+                {
+                    dataField: "name"
+                }, {
+                    dataField: "description",
+                    setCellValue: function (rowData, value) {
+                        rowData.description = value;
+                        rowData.name = "new name " + value;
+                    }
+                }, {
+                    dataField: "state",
+                    dataType: "boolean",
+
+
+                }, {
+                    dataField: "modelDate"
+                }]
+            });
+
+        });
+    </script>
+</head>
+<body>
+    <div id="gridContainer"></div>
+</body>
+</html>

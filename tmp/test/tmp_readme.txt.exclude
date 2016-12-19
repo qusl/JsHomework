@@ -1,0 +1,346 @@
+﻿
+>> RequireJS can be configured to append a value to each of the script urls for cache busting. 
+
+    From the RequireJS documentation (http://requirejs.org/docs/api.html#config):
+
+  -- http://stackoverflow.com/questions/8315088/prevent-requirejs-from-caching-required-scripts
+
+  urlArgs: Extra query string arguments appended to URLs that RequireJS uses to fetch resources. Most useful to cache bust when the browser or server is not configured correctly. Example cache bust setting for urlArgs:
+urlArgs: "bust=" +  (new Date()).getTime()
+
+	We cannot use urlArgs for building release. According to the doc: "During development it can be useful to use this, however be sure to remove it before deploying your code."
+	(http://requirejs.org/docs/api.html#config)
+
+	Caching and cache-busting with RequireJS: http://blog.johnnyreilly.com/2014/03/caching-and-cache-busting-with-requirejs.html
+
+>> We can add '$sce' to SignupViewController for both dependency and function to use $sce.trustAsHtml for unsame html
+
+  -- http://benohead.com/angularjs-binding-html-code-with-ng-bind-html-and-sce-trustashtml/
+
+>> https issue:
+
+app.service('MegaMenuService', [
+            '$http', function ($http) {
+                var fullUrl = CmpToolUtility.getFullUrlForMegaMenu();
+                this.getMegaMenu = function () {
+
+                    //    var agentOptions = {
+                    //        host: 'www.example.com'
+                    //    , port: '443'
+                    //    , path: '/'
+                    //    , rejectUnauthorized: false
+                    //    };
+                    //    var agent = new https.Agent(agentOptions);
+
+                    var request = {
+                        method: 'GET',
+                        //agent: agent,
+                        data: null,
+                        url: fullUrl
+                    };
+                    return $http(request);
+                }
+            }
+
+>> Angular force page/controller refresh using ui.route
+
+  -- http://embed.plnkr.co/qpk1GmbvaBDU01RYqtjj/
+  -- http://plnkr.co/edit/qpk1GmbvaBDU01RYqtjj?p=info
+
+>> Angular Best Practice
+
+  -- https://github.com/angular/angular.js/wiki/Best-Practices
+
+
+>> safe apply  
+
+  -- https://coderwall.com/p/ngisma/safe-apply-in-angular-js
+
+$scope.safeApply = function(fn) {
+  var phase = this.$root.$$phase;
+  if(phase == '$apply' || phase == '$digest') {
+    if(fn && (typeof(fn) === 'function')) {
+      fn();
+    }
+  } else {
+    this.$apply(fn);
+  }
+};
+
+
+>> AES: Advanced Encryption Standard (Encrypt in javascript and decrypt in C#)
+
+  -- http://www.c-sharpcorner.com/UploadFile/4d9083/encrypt-in-javascript-and-decrypt-in-C-Sharp-with-aes-algorithm/
+
+
+>> Best Practices for Building Angular.js Apps
+
+  -- https://medium.com/@dickeyxxx/best-practices-for-building-angular-js-apps-266c1a4a6917#.vnpwe2kkk
+
+
+>> Ignore invalid self-signed ssl certificate in node.js with https.request?
+
+  -- http://stackoverflow.com/questions/20433287/node-js-request-cert-has-expired#answer-29397100
+
+A less insecure way to fix this:
+
+'use strict';
+
+var request = require('request');
+var agentOptions;
+var agent;
+
+agentOptions = {
+  host: 'www.example.com'
+, port: '443'
+, path: '/'
+, rejectUnauthorized: false
+};
+
+agent = new https.Agent(agentOptions);
+
+request({
+  url: "https://www.example.com/api/endpoint"
+, method: 'GET'
+, agent: agent
+}, function (err, resp, body) {
+  // ...
+});
+By using an agent with rejectUnauthorized you at limit the security vulnerability to the requests that deal with that one site instead of making your entire node process completely, utterly insecure.
+
+
+>> error handling for $http
+
+  -- http://stackoverflow.com/questions/23914893/angular-js-http-intercept-neterr-connection-refused
+
+>> cannot show header buttons (becaust 'dxscripts.js' is not loaded, we should wait until home view loading is finished, then click 'Signup')
+
+[solution] added class in body:
+
+sometime open Developer Tool, it will work
+
+1. added class in body:
+
+<body class="dx-theme-generic dx-theme-generic-typography dx-color-scheme-light">
+
+2. change <script src=./scripts/devextreme/dxscripts.js"></script> to
+
+<script src="../scripts/devextreme/dxscripts.js"></script>
+
+
+>> encrypt:
+
+  -- http://www.asp.net/web-api/overview/security/enabling-cross-origin-requests-in-web-api#how-it-works
+
+//var encryptedData = btoa(myselected);
+        //var jsonEncryptedData = {data: encryptedData};
+
+        //alert(JSON.stringify(jsonEncryptedData));
+
+
+
+>> Read Excel:
+
+-- How to get drop down value: 
+
+     var selectedFormat = f.options[f.selectedIndex].value;
+
+1. it will run only in IE 9 and above ,and you have to activate activeX functionality from the settings ..
+
+-- http://stackoverflow.com/questions/16630413/how-can-i-read-an-excel-file-with-javascript-without-activexobject
+
+2. online demo: http://oss.sheetjs.com/js-xlsx/
+
+
+>> dxDataGrid - How to implement cascading lookup columns
+ -- https://www.devexpress.com/Support/Center/Question/Details/T241877
+
+>> dxDataGrid - How to store multiple values in a lookup column
+  -- https://www.devexpress.com/Support/Center/Question/Details/T268068
+  -- http://jsfiddle.net/jc1x2q7k/
+
+
+>> dxLookup:
+
+-- https://www.devexpress.com/Support/Center/Question/Details/T263102
+
+
+>> (CORS error) Can't send POST request (OPTIONS gets denied) with Angular to ASP.net REST 
+
+  -- http://stackoverflow.com/questions/32587294/cors-error-cant-send-post-request-options-gets-denied-with-angular-to-asp-n
+
+  For some reason the configs within WebApiConfig and Web.config answer got mixed up and didn't work together. I will find more time to learn why was this a problem, 
+  but in the meantime the working solution was to:
+
+Erase all the data in Web.config between <httpprotocol> tags (4th snippet in my post)
+In WebApiConfig, in EnableCorsAttribute initialization, sending '*' as first parameter didn't work, but typing explicitly: 'http://localhost:57810' did work! This is a second snippet in my original post.
+I have no idea why the second one obstructed my server. Maybe it's some sort of a bug, since documentation clearly says that '*' is a wildcard, or maybe some other configurations prevented it from working.
+
+
+>> how to pass multiple parameters to web api
+
+http://stackoverflow.com/questions/25161665/multiple-parameters-in-a-web-api-2-get
+
+>> Routing and Action Selection in ASP.NET Web API
+
+http://www.asp.net/web-api/overview/web-api-routing-and-actions/routing-and-action-selection
+
+>> pass multiple parameters to web api:
+
+http://techbrij.com/pass-parameters-aspdotnet-webapi-jquery
+
+You can directly parse it into strongly typed class:
+
+?
+public HttpResponseMessage PostProduct(JObject data)
+       {
+ 
+           Product item = data.ToObject<Product>();  
+           item = repository.Add(item);
+           var response = Request.CreateResponse<Product>(HttpStatusCode.Created, item);
+           string uri = Url.Link("DefaultApi", new { id = item.Id });
+           response.Headers.Location = new Uri(uri);
+           return response;
+       }
+
+>> JS object:
+
+        $scope.submenu = {
+            "Item": "getItem()",
+            "Sys": "getSys0()",
+            "Coming Soon": ""
+        };
+
+		<li ng-repeat="(key, value) in submenu"><a href="#" ng-click="loadFromSubMenu($index + 1)">{{ key }}</a></li>
+
+>>  //$scope.testaa = ["testok", "22200222", "333333"];
+
+<li ng-repeat="aa in testaa"><a href="#" ng-click="getSys0()">{{ aa }}</a></li>
+
+
+>> How to enable cross domain calls in JS:
+
+ //app.config(function ($httpProvider) {
+    //    //Enable cross domain calls
+    //    $httpProvider.defaults.useXDomain = true;
+    //    //Remove the header used to identify ajax call  that would prevent CORS from working
+    //    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    //});
+
+>>
+
+onRowUpdated: function (e) {
+
+var iNumber = JSON.stringify(e.data);
+var iNumber = JSON.stringify(e.key);
+                        alert(iNumber);
+
+
+						var all = JSON.parse(d);
+            for (first in all) break;
+            if (first.toString() == "ItemNumber") {
+                alert(all.ItemNumber);
+            }
+
+
+>> Use Fiddler to debug Web API (like PUT, DELETE)
+
+or, use this to test: http://plnkr.co/edit/4aeEDz73qgHSfOv1sBgn?p=preview
+
+(change the url and method name inside the code to test) http://localhost:11997/api/item/570
+
+Important Note: when the Put API call doesn't work, need to clear the browser cookie and close browser to try again.
+
+>> install CORS extension for Chrome
+
+>> chrome how to disable web security:
+
+  -- https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en
+
+  
+
+<!--<body>
+    <div ng-controller="mainCtrl as vm">
+        <div ng-repeat="reseller in vm.resellers">
+            <span>{{::reseller.ResellerID}}</span>
+            <span>{{::reseller.ResellerName}}</span>
+        </div>
+    </div>
+</body>-->
+
+{
+                        dataField: "Email",
+                        validationRules: [{ type: "required" }, { type: "email" }]
+                    }
+
+
+
+					{
+                        dataField: "ItemSpec",
+                        validationRules: [{ type: "required" }, {
+                            type: "Standard",
+                            message: 'Your phone must have "(555) 555-5555" format!',
+                            pattern: /^\(\d{3}\)\ \d{3}-\d{4}$/i 
+                        }]
+
+
+ columns: [{
+        caption: "Employee",
+        width: 230,
+        fixed: true,
+        calculateCellValue: function(data) {
+            return [data.Title,
+                data.FirstName, data.LastName]
+                .join(" ");
+        }
+
+
+
+                //item.ItemName = newItem.ItemName;
+                //item.SearchName = newItem.SearchName;
+                //item.ItemSpec = newItem.ItemSpec;
+                //item.Standard = newItem.Standard;
+                //item.Unit = newItem.Unit;
+                //item.IsActive = newItem.IsActive;
+                //item.IsStockItem = newItem.IsStockItem;
+                //item.Manufacturer = newItem.Manufacturer;
+                //item.FactoryItemNumber = newItem.FactoryItemNumber;
+                //item.SortOrder = newItem.SortOrder;
+                //item.Memo = newItem.Memo;
+
+
+>> cell button:
+
+  -- http://stackoverflow.com/questions/30252660/devextreme-dxdatagrid-pass-selected-rowdata-to-function-when-clicking-on-a-butt/30254143#30254143
+
+
+[Route("api/test/inmethod")]
+[HttpPost]
+public string Test(HttpRequestMessage request)
+{
+    switch (request.Content.Headers.ContentType.MediaType)
+    {
+        case "application/x-www-form-urlencoded":
+            var form = request.Content.ReadAsFormDataAsync().Result;
+            // Do Stuff
+            return "Processed x-www-form-urlencoded";
+
+        case "application/json":
+            var json = request.Content.ReadAsStringAsync().Result;
+            object obj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+            // Do stuff
+            return "Processed json";
+
+        default:
+            throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+    }
+}
+
+
+>> 160428:
+
+var parentinfo = {
+            "UserId": 'admin',
+            "ParentId": 'b66ee7e5a1929a46'
+        };
+

@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="../../lib/angular/angular.min.js"></script>
+    <script>
+        angular.module('myApp', [])
+        .run(function ($rootScope) {
+            $rootScope.test = new Date();
+        })
+        .controller('myCtrl', function ($scope, $rootScope) {
+           
+            $scope.getOrig = function () {
+                return $rootScope.test;
+            };
+        })
+        .controller('myCtrl2', function ($scope, $rootScope) {
+           
+            $scope.changeRs = function () {
+                $rootScope.test = new Date();
+            };
+
+            $scope.getOrig = function () {
+                return $rootScope.test;
+            };
+        });
+    </script>
+</head>
+<body>
+    <div ng-app="myApp">
+
+        <div ng-controller="myCtrl">
+            <strong>myCtrl</strong>
+            Original Value: {{getOrig()}}
+           
+        </div>
+        <br />
+        <div ng-controller="myCtrl2">
+            Original Value: {{getOrig()}}
+            <br/><br />
+            <button ng-click='changeRs()'>Change RootScope's Value</button>
+        </div>
+    </div>
+
+</body>
+</html>

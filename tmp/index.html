@@ -1,0 +1,250 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <base href="/">
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="Content/localfonts.css" />
+    <link rel="stylesheet" href="Content/metronic/global/css/components-rounded.css" />
+    <link rel="stylesheet" href="Content/metronic/global/css/components.css" />
+    <link rel="stylesheet" href="Content/metronic/global/css/plugins.css" />
+    <link rel="stylesheet" href="Content/metronic/admin/layout3/css/megamenu.css" />
+    <link rel="stylesheet" href="css/dx.common.css" />
+    <link rel="stylesheet" href="css/tb.light.darkred.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="Content/metronic/admin/layout3/css/themes/configtool.css" />
+    <link href="lib/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+    <link href="lib/toastr/toastr.min.css" rel="stylesheet" />
+
+    <script src="lib/jquery/jquery-2.1.4.min.js"></script>
+    <script src="lib/angular/angular.min.js"></script>
+    <script src="lib/angular/angular-route.min.js"></script>
+    <script src="lib/angular/angular-sanitize.min.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="lib/devextreme/dx.web.js"></script>
+    <script src="lib/toastr/toastr.min.js"></script>
+    <script src="lib/sweetalert2/sweetalert2.min.js"></script>
+    <script src="lib/other/jszip.min.js"></script>
+
+    <script src="scripts/app.initial.js?161101"></script>
+    <script src="scripts/app.util.js?161102a"></script>
+    <script src="scripts/app.service.helper.js?161101"></script>
+    <!--<script src="scripts/devextreme/mygridconfigForReport.js?161102"></script>-->
+    <script src="scripts/all.min.js?161209"></script>
+    <script src="scripts/app.js?161209"></script>
+
+    <title></title>
+</head>
+<body ng-app="app" ng-controller="mainViewController">
+
+    <div id="loading" class="hide">
+        <div id="loading-content">
+            <img src="images/loading.gif" />
+        </div>
+    </div>
+
+    <div id="wrap">
+        <div id="header">
+            <div class="navbar navbar-inverse navbar-fixed-top">
+                <div class="navbar-inner">
+                    <div class="container-fluid">
+                        <a style="display:inline-block;" class="brand pull-left" ng-click="loadHome()">CMP TOOL</a>
+                        <div id="navigation">
+                            <ul class="nav navbar-nav ">
+                                <li id="aggregator" ng-class="{selected : appActiveTopMenu === appTopmenuAggregator}">
+                                    <a ng-click="loadAggregator()" ng-bind="appTopmenuAggregator"></a>
+                                </li>
+                                <li id="signup" ng-class="{selected : appActiveTopMenu === appTopmenuSignup}">
+                                    <a ng-click="loadSignup()" ng-bind="appTopmenuSignup"></a>
+                                </li>
+                                <li id="plangroup" ng-class="{selected : appActiveTopMenu === appTopmenuPlanGroup}">
+                                    <a ng-click="loadPlanGroup()" ng-bind="appTopmenuPlanGroup"></a>
+                                </li>
+                                <li id="reseller" ng-class="{selected : appActiveTopMenu === appTopmenuReseller}">
+                                    <a ng-click="loadReseller()" ng-bind="appTopmenuReseller"></a>
+                                </li>
+                                <li id="upsell" ng-class="{selected : appActiveTopMenu === appTopmenuUpsell}">
+                                    <a ng-click="loadUpsell()" ng-bind="appTopmenuUpsell"></a>
+                                </li>
+                                <li id="termsandconditions" ng-class="{selected : appActiveTopMenu === appTopmenuTermcondition}">
+                                    <a ng-click="loadTermsAndConditions()" ng-bind="appTopmenuTermcondition"></a>
+                                </li>
+                                <li id="netterms" ng-class="{selected : appActiveTopMenu === appTopmenuNetTerms}">
+                                    <a ng-click="loadNetTerms()" ng-bind="appTopmenuNetTerms"></a>
+                                </li>
+                                <li id="navigation" ng-class="{selected : appActiveTopMenu === appTopmenuNavigation}">
+                                    <a ng-click="loadNavigation()" ng-bind="appTopmenuNavigation"></a>
+                                </li>
+                                <li id="multilanguage" ng-class="{selected : appActiveTopMenu === appTopmenuMultilanguage}">
+                                    <a ng-click="loadMultiLanguage()" ng-bind="appTopmenuMultilanguage"></a>
+                                </li>
+                                <li id="sysconfig" ng-class="{selected : appActiveTopMenu === appTopmenuSysConfig}">
+                                    <a ng-click="loadSysConfig()" ng-bind="appTopmenuSysConfig"></a>
+                                </li>
+                                <li id="synctool" ng-class="{selected : appActiveTopMenu === appTopmenuSyncTool}">
+                                    <a ng-click="loadSyncTool()" ng-bind="appTopmenuSyncTool"></a>
+                                </li>
+
+                                <li id="megamenutopbar" style="display:none" class="menu-dropdown mega-menu-dropdown mega-menu-full">
+                                    <a data-hover="megamenu-dropdown" data-toggle="dropdown" href="javascript:;" target="_blank" class="dropdown-toggle">
+                                        MegaMenu
+                                    </a>
+                                    <ul class="dropdown-menu" ng-controller="megamenuController">
+                                        <megamenu-directive></megamenu-directive>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div align="right" style="float:right; margin-top: 20px; margin-right: 10px;">
+                            <a href="#" ng-click="logout()">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="main" class="container-fluid" style="display:none">
+            <section class="layout-navigation">
+                <div class="site-logo">
+                    <div class="main-menu" id="MainMenu"></div>
+                </div>
+                <div class="left-menu">
+                    <div class="menu-header" ng-bind="(appActiveTopMenu) + ' Manager'"></div>
+                    <ul>
+                        <li ng-repeat="menuname in submenu" ng-class="{'selected' : appActiveLeftMenu === menuname}">
+                            <a href="#" ng-click="loadFromSubMenu($event, menuname)" ng-bind="menuname" ng-class="{'selected' : appActiveLeftMenu === menuname}"></a>
+                        </li>
+                    </ul>
+                    
+                    <div class="leftmenu-msgkey-first" ng-bind="(appActiveTopMenu) + ' Manager'"></div>
+                    <div class="leftmenu-markepplace" ng-bind="'- ' + (appMarketplace)"></div>
+                    <div class="leftmenu-menuname" ng-bind="'- ' + (appMenuname)" id="selectedMenuname"></div>
+                    <div class="leftmenu-msgkey-last" id="SelectedCategory">
+                        <label style="margin-bottom:  10px;">Selected Category:</label>
+                        <br>
+                        <span id="SelectedCategoryId" style="margin-left: 20px;"></span>
+                    </div>
+                    
+                    <div class="dx-field" style="margin-left: -158px; margin-top: 26px;">
+                        <div class="dx-field-value"><div id="syncOtherTables" style="width: 180px;"></div></div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="layout-content">
+                <header class="header">
+                    <div class="buttons" style="float:left; margin-right:20px;">
+                        <div id="btnChooser" class="button-chooser dx-widget dx-button-has-icon dx-button" title="Choose grid columns" aria-label="column-chooser">
+                            <div class="dx-button-content" ng-click="btnChooserClick()">
+                                <i class="dx-icon dx-icon-column-chooser"></i>
+                            </div>
+                        </div>
+
+                        <div id="btnExport" class="button-export dx-widget dx-button-has-icon dx-button" title="Export" aria-label="export">
+                            <div class="dx-button-content">
+                                <i class="dx-icon dx-icon-export" ng-click="btnExportClick()"></i>
+                            </div>
+                        </div>
+                        
+                        <div id="btnFixNums" class="button-fixNums dx-widget dx-button-has-icon dx-button" title="Change Nums" aria-label="fixNums">
+                            <div class="dx-button-content">
+                                <i class="dx-icon dx-icon-fixNums" ng-click="btnFixNumsClick()"></i>
+                            </div>
+                        </div>
+                        
+                        <div id="btnHealthCheck" class="button-healthcheck dx-widget dx-button-has-icon dx-button" title="Health check" aria-label="healthcheck">
+                            <div class="dx-button-content">
+                                <i class="dx-icon dx-icon-healthcheck" ng-click="btnHealthCheckClick()"></i>
+                            </div>
+                        </div>
+
+                        <div class="button-custom-edit dx-widget dx-button-has-icon dx-button" title="Edit" aria-label="custom-edit">
+                            <div class="dx-button-content">
+                                <i class="dx-icon dx-icon-custom-edit" ng-click="btnEditClick()"></i>
+                            </div>
+                        </div>
+
+                        <div class="button-custom-delete dx-widget dx-button-has-icon dx-button" title="Delete" aria-label="custom-delete">
+                            <div class="dx-button-content">
+                                <i class="dx-icon dx-icon-custom-delete" ng-click="btnDeleteClick()"></i>
+                            </div>
+                        </div>
+
+                        <div class="button-custom-add dx-widget dx-button-has-icon dx-button" title="Add new row" aria-label="custom-add">
+                            <div class="dx-button-content">
+                                <i class="dx-icon dx-icon-custom-add" ng-click="btnAddClick()"></i>
+                            </div>
+                        </div>
+
+                        <div id="btnEditHtml1" class="button-custom-html1 dx-widget dx-button-has-icon dx-button" title="Edit Html" aria-label="custom-edithtml" style="display: none">
+                            <div class="dx-button-content">
+                                <i class="dx-icon dx-icon-custom-html" ng-click="btnEditHtml1Click()"></i>
+                            </div>
+                        </div>
+
+                        <div id="btnEditHtml2" class="button-custom-html2 dx-widget dx-button-has-icon dx-button" title="Edit Html" aria-label="custom-edithtml" style="display: none">
+                            <div class="dx-button-content">
+                                <i class="dx-icon dx-icon-custom-html" ng-click="btnEditHtml2Click()"></i>
+                            </div>
+                        </div>
+
+                        <div id="btnOsa" class="button-custom-osa dx-widget dx-button-has-icon dx-button" title="Retrieve data from OSA Database" aria-label="custom-osa" style="display: none">
+                            <div class="dx-button-content">
+                                <i class="dx-icon dx-icon-custom-osa" ng-click="btnOsaClick()"></i>
+                            </div>
+                        </div>
+
+                        <div id="btnSync" class="button-custom-sync dx-widget dx-button-has-icon dx-button" title="Synchronize data from OSA to CMP" aria-label="custom-sync" style="display: none">
+                            <div class="dx-button-content">
+                                <i class="dx-icon dx-icon-custom-sync" ng-click="btnSyncClick()"></i>
+                            </div>
+                        </div>
+
+                        <div id="btnPopulate" class="button-custom-populate dx-widget dx-button-has-icon dx-button" title="Populate Data Based on SyncMappingTable" aria-label="custom-populate" style="display: none">
+                            <div class="dx-button-content">
+                                <i class="dx-icon dx-icon-custom-populate" ng-click="btnPopulateClick()"></i>
+                            </div>
+                        </div>
+
+                        <div id="batchEditingCheckBox" style="margin-left: 30px; display: none"></div>
+
+                    </div>
+                    
+                    <div><a href="#" ng-click="expandMainContent()">
+                             <img src="images/misc_expand.png" title="Change main content display size" alt="Change main content display size" class="expand-image" />
+                    </a>
+                    </div>
+
+                    <div class="search-box">
+                        <div class="search dx-texteditor dx-texteditor-empty dx-widget" style="width: 220px; height: 30px;">
+                            <div class="dx-texteditor-container">
+                                <input id="mainSearch" class="dx-texteditor-input" autocomplete="off" type="text" spellcheck="false" role="textbox" ng-change="mainSearch(searchText)" ng-model="searchText">
+                                <div class="dx-texteditor-buttons-container"></div>
+                            </div>
+                        </div>
+                        <div class="icon-find"></div>
+                    </div>
+                </header>
+                <div class="main-content">
+                    <div id="myGridView"></div>
+                </div>
+            </section>
+        </div>
+        
+        <div id="home" ng-controller="homeViewController">
+            <homedirective></homedirective>
+        </div>
+    </div>
+   
+    <script>
+        var appName = 'CMPTool';
+        var appVerNumber = 'ver:161212';
+        document.title = appName + ' ' + appVerNumber;
+        if (CmpToolStatic.appShowLoadingImage) {
+            document.getElementById('loading').classList.remove('hide');
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,298 @@
+﻿
+(function() {
+    window.SCROLL_X = 0;
+    window.SCROLL_Y = 0;
+    window.UNDEF = 'undefined';
+    window.HID = 'hidden';
+    window.VIS = 'visible';
+    window.ABS = 'absolute';
+    window.FIX = 'fixed';
+    window.REL = 'relative';
+    window.STA = 'static';
+    window.INH = 'inherit';
+    window.TP = 'top';
+    window.BM = 'bottom';
+    window.LT = 'left';
+    window.RT = 'right';
+    if (document.all) window.BROWSER = 'IE';
+    else if (window.opera) window.BROWSER = 'Opera';
+    else if (navCheck('Chrome')) window.BROWSER = 'Chrome';
+    else if (navCheck('iPod')) window.BROWSER = 'iPod';
+    else if (navCheck('iPhone')) window.BROWSER = 'iPhone';
+    else if (navCheck('iPad')) window.BROWSER = 'iPad';
+    else if (navCheck('Android')) window.BROWSER = 'Android';
+    else if (navCheck('Safari')) window.BROWSER = 'Safari';
+    else if (navCheck('Gecko')) window.BROWSER = 'Firefox';
+    else window.BROWSER = 'UNKNOWN'
+    function navCheck(check) {
+        return navigator.userAgent.indexOf(check) != -1;
+    }
+})();
+
+function O(id, property, value) 
+{
+    if (id instanceof Array) {
+        var tmp = [];
+        for (var j = 0; j < id.length; ++j)
+            tmp.push(O(id[j], property, value));
+        return tmp;
+    }
+
+    if (typeof property != UNDEF && typeof value != UNDEF) {
+        if (typeof value == 'string') value = "'" + value + "'";
+        if (typeof id == 'object') return eval(id.property = value);
+        else return eval("O('" + id + "')." + property + " = " + value);
+    }
+
+    if (typeof id == 'object') return id;
+    else {
+        try {
+            return document.getElementById(id);
+        } catch (e) {
+            alert('Unknown ID: ' + id);
+        }
+    }
+}
+
+function S(id, property, value) 
+{
+    if (id instanceof Array) {
+        var tmp = [];
+        for (var j = 0; j < id.length; ++j)
+            tmp.push(S(id[j], property, value));
+        return tmp;
+    }
+
+    if (typeof property != UNDEF && typeof value != UNDEF) {
+        try {
+            return O(id).style[property] = value;
+        } catch (e) {
+            alert('Unknown ID: ' + id);
+        }
+    }
+    else if (typeof id == 'object') return id.style;
+    else {
+        try {
+            return O(id).style;
+        } catch (e) {
+            alert('Unknown ID: ' + id);
+        }
+    }
+}
+
+function NoPx(value) {
+    return value.replace(/px/, '') * 1;
+}
+
+function Px(value) {
+    return value + 'px';
+}
+
+function ResizeWidth(id, width) {
+    S(id, 'overflow', HID);
+    S(id, 'width', Px(width));
+}
+
+function ResizeHeight(id, height) {
+    S(id, 'overflow', HID);
+    S(id, 'height', Px(height));
+}
+
+function Resize(id, width, height) {
+    ResizeWidth(id, width);
+    ResizeHeight(id, height);
+}
+
+function Position(id, type) {
+    S(id, 'position', type);
+}
+
+function GetWindowWidth() {
+    var de = document.documentElement;
+
+    if (BROWSER != 'IE') {
+        var barwidth = de.scrollHeight > de.clientHeight ? 17 : 0;
+        return window.innerWidth - barwidth;
+    }
+
+    return de.clientWidth || document.body.clientWidth;
+}
+
+function GetWindowHeight() {
+    var de = document.documentElement;
+
+    if (BROWSER != 'IE') {
+        var barwidth = de.scrollWidth > de.clientWidth ? 17 : 0;
+        return window.innerHeight - barwidth;
+    }
+
+    return de.clientHeight || document.body.clientHeight;
+}
+
+
+function W(id) {
+    var width = O(id).offsetWidth +
+        NoPx(S(id).marginLeft) +
+        NoPx(S(id).marginRight);
+
+    var bord = NoPx(S(id).borderLeftWidth) +
+        NoPx(S(id).borderRightWidth);
+
+    if (bord > 0) width -= bord;
+    else if (O(id).border) width -= O(id).border * 2;
+
+    return width;
+}
+
+function H(id) {
+    var height = O(id).offsetHeight +
+        NoPx(S(id).marginTop) +
+        NoPx(S(id).marginBottom);
+
+    var bord = NoPx(S(id).borderTopWidth) +
+        NoPx(S(id).borderBottomWidth);
+
+    if (bord > 0) height -= bord;
+    else if (O(id).border) height -= O(id).border * 2;
+
+    return height;
+}
+
+function CenterX(id){
+    if (id instanceof Array) {
+        for (var j = 0; j < id.length; ++j)
+            CenterX(id[j]);
+        return;
+    }
+
+    S(id).left = Px(Math.round((GetWindowWidth() - W(id))) / 2 + SCROLL_X);
+}
+
+function CenterY(id){
+    if (id instanceof Array) {
+        for (var j = 0; j < id.length; ++j)
+            CenterY(id[j]);
+        return;
+    }
+
+    S(id).top = Px(Math.round((GetWindowHeight() - H(id))) / 2 + SCROLL_Y)
+}
+
+function Center(id) {
+    CenterX(id);
+    CenterY(id);
+}
+
+function GoTo(id, x, y) {
+    S(id, 'left', Px(x));
+    S(id, 'top', Px(y));
+}
+
+function InsVars() {
+    var tmp = arguments[0];
+
+    for (var j = 1; j < arguments.length; ++j)
+        tmp = tmp.replace(new RegExp('#' + j, 'g'), arguments[j]);
+    return tmp;
+}
+
+function Opacity(id, percent) {
+    S(id, 'opacity', percent / 100);
+    S(id, 'MozOpacity', percent / 100);
+    S(id, 'KhtmlOpacity', percent / 100);
+    S(id, 'filter', InsVars("alpha(opacity = '#1')", percent));
+}
+
+function X(id) {
+    var obj = O(id);
+    var offset = obj.offsetLeft;
+
+    if (obj.offsetParent)
+        while (obj = obj.offsetParent)
+            offset += obj.offsetLeft;
+
+    return offset;
+}
+
+function Y(id) {
+    var obj = O(id);
+    var offset = obj.offsetTop;
+
+    if (obj.offsetParent)
+        while (obj = obj.offsetParent)
+            offset += obj.offsetTop;
+
+    return offset;
+}
+
+function Invisible(id) {
+    S(id, 'visibility', HID);
+}
+
+function Visible(id) {
+    S(id, 'visibility', VIS);
+}
+
+function Html(id, value) {
+    if (typeof value != UNDEF)
+        O(id).innerHTML = value;
+    return O(id).innerHTML;
+}
+
+function Alert(value) {
+    var abs = 'absolute';
+    var divs = Array('ALERT_DIV', 'SHADOW_DIV');
+    var warn = "<font color=green size=6 style='vertical-align:middle;'>" +
+        "&#916;</font>&nbsp;";
+    var ok = "<center><input id='ALERT_OK' type='submit' /></center>";
+    var mess = warn + value + '<br /><br />' + ok;
+    var html = "<div id='ALERT_TITLE'></div>" +
+        "<div id='ALERT_MESSAGE'></div>";
+
+    if (!O('ALERT_DIV')) {
+        var newdiv = document.createElement('div');
+        newdiv.id = 'SHADOW_DIV';
+        document.body.appendChild(newdiv);
+        newdiv = document.createElement('div');
+        newdiv.id = 'ALERT_DIV';
+        document.body.appendChild(newdiv);
+        Position(divs, abs);
+        Resize('ALERT_DIV', 350, 140);
+        Resize('SHADOW_DIV', 354, 146);
+        Center('ALERT_DIV');
+        GoTo('SHADOW_DIV', X('ALERT_DIV') + 4, Y('ALERT_DIV') + 6);
+        Opacity('SHADOW_DIV', 50);
+    }
+
+    alertHide();
+    Html('ALERT_DIV', html);
+    Resize('ALERT_TITLE', 350, 22);
+    Resize('ALERT_MESSAGE', 330, 98);
+    Html('ALERT_TITLE', 'Message from the webpage');
+    Html('ALERT_MESSAGE', mess);
+
+    S('ALERT_TITLE').background = '#acc5e0';
+    S('ALERT_TITLE').fontFamily = 'Arial';
+    S('ALERT_TITLE').paddingTop = '2px';
+    S('ALERT_TITLE').textAlign = 'center';
+    S('ALERT_TITLE').fontSize = '14px';
+    S('ALERT_MESSAGE').fontFamily = 'Arial';
+    S('ALERT_MESSAGE').fontSize = '12px';
+    S('ALERT_MESSAGE').padding = '10px';
+    S('ALERT_MESSAGE').overflow = 'auto';
+    S('ALERT_DIV').background = '#f0f0f0';
+    S('ALERT_DIV').border = 'solid #444444 1px';
+    S('SHADOW_DIV').background = '#444444';
+    O('ALERT_OK').value = '      OK      ';
+
+    O('ALERT_OK').onclick = alertHide;
+    Visible(divs);
+
+    function alertHide() {
+        Invisible(divs);
+    }
+}
+
+function ReplaceAlert() {
+    window.alert = Alert;
+}

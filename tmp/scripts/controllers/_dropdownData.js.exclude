@@ -1,0 +1,424 @@
+﻿
+var appData = (function(Module) {
+
+    // use this for PlanId dropdown, with PlanNum > 0: (will get all if resellerId = 0)
+   dropdownModule.getInternalPlansWithPlanNumData = function (scope) {
+       var tableName = "InternalPlans";
+       var getMethod = "GetInternalPlansWithPlanNumByResellerIdForDropDown";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+
+        var mp = CmpToolUtility.getMarketplaces();
+       var i;
+       window.internalPlansWithPlanNumDropdownList = window.internalPlansWithPlanNumDropdownList || [];
+       for (i = 0; i < CmpToolStatic.totalMarketplaces; i++) {
+           if (CmpToolStatic.selectedMarketplace == mp[i] && window.internalPlansWithPlanNumDropdownList[i]) {
+                scope.internalPlansWithPlanNumDropdown = window.internalPlansWithPlanNumDropdownList[i];
+                return;
+                }
+                }
+
+        scope.internalPlansWithPlanNumDropdown = null;
+        scope.getServiceData(tableName, getMethod, resellerId).then(function (response) {
+            scope.internalPlansWithPlanNumDropdown = response.data;
+            var j;
+            for (j = 0; j < CmpToolStatic.totalMarketplaces; j++) {
+                if (CmpToolStatic.selectedMarketplace === mp[j])
+                    window.internalPlansWithPlanNumDropdownList[j] = response.data;
+                    }
+                    });
+}
+
+    dropdownModule.getParentResellerData = function(scope) {
+        if (scope.parentResellerDropdown && scope.parentResellerDropdown.length > 0) {
+            return;
+            }
+        var resellerTableName = "Resellers";
+        var parentResellerGetMethod = "GetParentResellersWithoutL0ForDropDown";
+        scope.getServiceData(tableName, getMethod).then(function(response) {
+            scope.parentResellerDropdown = response.data;
+        });
+        }
+
+    // use this for ResourceId dropdown: (will get all if resellerId = 0)
+    dropdownModule.getInternalResourcesMapData = function (scope) {
+        if (scope.internalResourcesMapDropdown && scope.internalResourcesMapDropdown.length > 0) {
+            return;
+        }
+        var internalResourcesMapTableName = "InternalResourcesMap";
+        var internalResourcesMapGetMethod = "GetInternalResourcesMapByResellerIdForDropDown";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+        scope.getServiceData(tableName, getMethod, resellerId).then(function (response) {
+            scope.internalResourcesMapDropdown = response.data;
+        });
+    }
+
+    // use this for ResourceId with num : (will get all if resellerId = 0)
+    Module.getInternalResourcesWithNumData = function (scope) {
+        if (scope. && scope.internalResourcesWithNum.length > 0) {
+            return;
+        }
+        myInitial.internalResourcesWithNumTableName = "InternalResourcesMap";
+        myInitial.internalResourcesWithNumGetMethod = "GetInternalResourcesWithNumByResellerIdFor";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+        scope.getServiceData(tableName, getMethod, resellerId).then(function (response) {
+            scope.internalResourcesWithNum = response.data;
+        });
+    }
+
+    // use this for PlanId : (will get all if resellerId = 0)
+    Module.getInternalPlansData = function (scope) {
+        if (scope. && scope.internalPlans.length > 0) {
+            return;
+        }
+        myInitial.internalPlansTableName = "InternalPlans";
+        myInitial.internalPlansGetMethod = "GetInternalPlansByResellerIdFor";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+        scope.getServiceData(tableName, getMethod, resellerId).then(function(response) {
+            scope.internalPlans = response.data;
+        });
+    }
+
+    // use this for PlanId , with PlanNum > 0: (will get all if resellerId = 0)
+    Module.getInternalPlansWithPlanNumData = function (scope) {
+        if (scope. && scope.internalPlansWithPlanNum.length > 0) {
+            return;
+        }
+        myInitial.internalPlansWithPlanNumTableName = "InternalPlans";
+        myInitial.internalPlansWithPlanNumGetMethod = "GetInternalPlansWithPlanNumByResellerIdFor";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+        scope.getServiceData(tableName, getMethod, resellerId).then(function (response) {
+            scope.internalPlansWithPlanNum = response.data;
+        });
+    }
+
+    // use this for DisplayPlans PlanId : (will get all if resellerId = 0)
+    Module.getDisplayPlansData = function (scope) {
+        if (scope. && scope.displayPlans.length > 0) {
+            return;
+        }
+        myInitial.displayPlansTableName = "DisplayPlans";
+        myInitial.displayPlansGetMethod = "GetDisplayPlansByResellerIdFor";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+        scope.getServiceData(tableName, getMethod, resellerId).then(function(response) {
+            scope.displayPlans = response.data;
+        });
+    }
+
+    // use this for DisplayCategory CategoryId : (will get all if resellerId = 0)
+    Module.getDisplayCategoriesData = function(scope) {
+        if (scope. && scope.displayCategories.length > 0) {
+            return;
+        }
+        myInitial.displayCategoriesTableName = "DisplayCategory";
+        myInitial.displayCategoriesGetMethod = "GetDisplayCategoriesByResellerIdFor";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+        scope.getServiceData(tableName, getMethod, resellerId).then(function(response) {
+            scope.displayCategories = response.data;
+        });
+    }
+
+    // use this for ParentDisplayCategory CategoryId : (will get all if resellerId = 0)
+    Module.getParentDisplayCategoriesData = function (scope) {
+        if (scope. && scope.displayParentCategories.length > 0) {
+            return;
+        }
+        myInitial.displayParentCategoriesTableName = "DisplayCategory";
+        myInitial.displayParentCategoriesGetMethod = "GetParentDisplayCategoriesByResellerIdFor";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+        scope.getServiceData(tableName, getMethod, resellerId).then(function (response) {
+            scope.displayParentCategories = response.data;
+        });
+    }
+
+    // use this for PermissionTypeId :
+    Module.getPermissionTypeData = function(scope) {
+        if (scope. && scope.permissionType.length > 0) {
+            return;
+        }
+        myInitial.permissionTypeTableName = "PermissionType";
+        myInitial.permissionTypeGetMethod = "GetPermissionTypeFor";
+        scope.getServiceData(tableName, getMethod).then(function(response) {
+            scope.permissionType = response.data;
+        });
+    }
+
+    // use this for PermissionTypeId :
+    Module.getResellerFolderData = function(scope) {
+        if (scope. && scope.activedResellerFolders.length > 0) {
+            return;
+        }
+        myInitial.activedResellerFoldersTableName = "ResellerFolder";
+        myInitial.activedResellerFoldersGetMethod = "GetResellerFolderFor";
+        scope.getServiceData(tableName, getMethod).then(function(response) {
+            scope.activedResellerFolders = response.data;
+        });
+    }
+
+    // use this for VendorId :
+    Module.getVenderData = function(scope) {
+        if (scope. && scope.vendorNameSlug.length > 0) {
+            return;
+        }
+        myInitial.vendorNameSlugTableName = "VendorNameSlug";
+        myInitial.vendorNameSlugGetMethod = "GetVendorNameSlugFor";
+        scope.getServiceData(tableName, getMethod).then(function(response) {
+            scope.vendorNameSlug = response.data;
+        });
+    }
+
+    // use this for ProductId :
+    Module.getProdctData = function(scope) {
+        if (scope. && scope.productNameSlug.length > 0) {
+            return;
+        }
+        myInitial.productNameSlugTableName = "ProductNameSlug";
+        myInitial.productNameSlugGetMethod = "GetProductNameSlugFor";
+        scope.getServiceData(tableName, getMethod).then(function(response) {
+            scope.productNameSlug = response.data;
+        });
+    }
+
+    // use this for PlanAttributeDetails :
+    Module.getPlanAttributeDetailData = function (scope) {
+        if (scope. && scope.planAttributeDetail.length > 0) {
+            return;
+        }
+        myInitial.planAttributeDetailTableName = "PlanAttributeDetails";
+        myInitial.planAttributeDetailGetMethod = "GetPlanAttributeDetailsFor";
+        scope.getServiceData(tableName, getMethod).then(function (response) {
+            scope.planAttributeDetail = response.data;
+        });
+    }
+
+    // use this for Upsells :
+    Module.getUpsellsData = function (scope) {
+        if (scope. && scope.upsell.length > 0) {
+            return;
+        }
+        myInitial.upsellTableName = "Upsells";
+        myInitial.upsellGetMethod = "GetUpsellsByResellerIdFor";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+        scope.getServiceData(tableName, getMethod, resellerId).then(function (response) {
+            scope.upsell = response.data;
+        });
+    }
+
+    // use this for BillingTermType :
+    Module.getBillingTermTypeData = function (scope) {
+        if (scope. && scope.billingTermType.length > 0) {
+            return;
+        }
+        myInitial.billingTermTypeTableName = "BillingTermType";
+        myInitial.billingTermTypeGetMethod = "GetBillingTermTypeFor";
+        scope.getServiceData(tableName, getMethod).then(function (response) {
+            scope.billingTermType = response.data;
+        });
+    }
+
+    // use this for BillingTermDisplayType :
+    Module.getBillingTermDisplayTypeData = function (scope) {
+        if (scope. && scope.billingTermDisplayType.length > 0) {
+            return;
+        }
+        myInitial.billingTermDisplayTypeTableName = "BillingTermDisplayType";
+        myInitial.billingTermDisplayTypeGetMethod = "GetBillingTermDisplayTypeFor";
+        scope.getServiceData(tableName, getMethod).then(function (response) {
+            scope.billingTermDisplayType = response.data;
+        });
+    }
+
+    // use this for BillingTerms :
+    Module.getBillingTermsData = function (scope) {
+        if (scope. && scope.billingTerms.length > 0) {
+            return;
+        }
+        myInitial.billingTermsTableName = "BillingTerms";
+        myInitial.billingTermsGetMethod = "GetBillingTermsByResellerIdFor";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+        scope.getServiceData(tableName, getMethod, resellerId).then(function (response) {
+            scope.billingTerms = response.data;
+        });
+    }
+
+    // use this for PaymentMethods :
+    Module.getPaymentMethodsData = function (scope) {
+        if (scope. && scope.paymentMethods.length > 0) {
+            return;
+        }
+        myInitial.paymentMethodsTableName = "PaymentMethods";
+        myInitial.paymentMethodsGetMethod = "GetPaymentMethodsFor";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+        scope.getServiceData(tableName, getMethod, resellerId).then(function (response) {
+            scope.paymentMethods = response.data;
+        });
+    }
+
+    // use this for BillingTermDescription :
+    Module.getBillingTermDescriptionData = function (scope) {
+        if (scope. && scope.billingTermDescription.length > 0) {
+            return;
+        }
+        myInitial.billingTermDescriptionTableName = "BillingTermDescription";
+        myInitial.billingTermDescriptionGetMethod = "GetBillingTermDescriptionFor";
+        scope.getServiceData(tableName, getMethod).then(function (response) {
+            scope.billingTermDescription = response.data;
+        });
+    }
+
+    // use this for parent plangroup :
+    Module.getParentPlanGroupData = function (scope) {
+        if (scope. && scope.parentPlanGroup.length > 0) {
+            return;
+        }
+        myInitial.parentPlanGroupTableName = "PlanGroup";
+        myInitial.parentPlanGroupGetMethod = "GetParentPlanGroupByResellerIdFor";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+        scope.getServiceData(tableName, getMethod, resellerId).then(function (response) {
+            scope.parentPlanGroup = response.data;
+        });
+    }
+
+    // use this for child plangroup :
+    Module.getChildPlanGroupData = function (scope) {
+        if (scope. && scope.childPlanGroup.length > 0) {
+            return;
+        }
+        myInitial.childPlanGroupTableName = "PlanGroup";
+        myInitial.childPlanGroupGetMethod = "GetChildPlanGroupByResellerIdFor";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+        scope.getServiceData(tableName, getMethod, resellerId).then(function (response) {
+            scope.childPlanGroup = response.data;
+        });
+    }
+
+    // use this for all plangroup :
+    Module.getAllPlanGroupData = function (scope) {
+        if (scope. && scope.allPlanGroup.length > 0) {
+            return;
+        }
+        myInitial.allPlanGroupTableName = "PlanGroup";
+        myInitial.allPlanGroupGetMethod = "GetAllPlanGroupByResellerIdFor";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+        scope.getServiceData(tableName, getMethod, resellerId).then(function (response) {
+            scope.allPlanGroup = response.data;
+        });
+    }
+
+    // use this for ResellerAttributes :
+    Module.getResellerAttributeData = function (scope) {
+        if (scope. && scope.resellerAttribute.length > 0) {
+            return;
+        }
+        myInitial.resellerAttributeTableName = "ResellerAttributeDetails";
+        myInitial.resellerAttributeGetMethod = "GetResellerAttributeDetailsFor";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+        scope.getServiceData(tableName, getMethod, resellerId).then(function (response) {
+            scope.resellerAttribute = response.data;
+        });
+    }
+
+    // use this for Active Languages :
+    Module.getActiveLanguagesData = function (scope) {
+        if (scope. && scope.activeLanguages.length > 0) {
+            return;
+        }
+        myInitial.activeLanguagesTableName = "Languages";
+        myInitial.activeLanguagesGetMethod = "GetLanguagesFor";
+        scope.getServiceData(tableName, getMethod).then(function (response) {
+            scope.activeLanguages = response.data;
+        });
+    }
+
+    // use this for All Languages :
+    Module.getAllLanguagesData = function (scope) {
+        if (scope. && scope.allLanguages.length > 0) {
+            return;
+        }
+        myInitial.allLanguagesTableName = "Languages";
+        myInitial.allLanguagesGetMethod = "GetAllLanguagesFor";
+        scope.getServiceData(tableName, getMethod).then(function (response) {
+            scope.allLanguages = response.data;
+        });
+    }
+
+    // use this for All ResellerContent :
+    Module.getResellerContentData = function (scope) {
+        if (scope. && scope.resellerContent.length > 0) {
+            return;
+        }
+        myInitial.resellerContentTableName = "ResellerContent";
+        myInitial.resellerContentGetMethod = "GetResellerContentFor";
+        scope.getServiceData(tableName, getMethod).then(function (response) {
+            scope.resellerContent = response.data;
+        });
+    }
+
+    // use this for TermsAndConditions :
+    Module.getTermsAndConditionsData = function (scope) {
+        if (scope. && scope.termsAndConditions.length > 0) {
+            return;
+        }
+        myInitial.termsAndConditionsTableName = "TermsAndConditions";
+        myInitial.termsAndConditionsGetMethod = "GetTermsAndConditionsByResellerIdFor";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+        scope.getServiceData(tableName, getMethod, resellerId).then(function (response) {
+            scope.termsAndConditions = response.data;
+        });
+    }
+
+    // use this for TermsAndConditionsGroup :
+    Module.getTermsAndConditionsGroupData = function (scope) {
+        if (scope. && scope.termsAndConditionsGroup.length > 0) {
+            return;
+        }
+        myInitial.termsAndConditionsGroupTableName = "TermsAndConditionsGroup";
+        myInitial.termsAndConditionsGroupGetMethod = "GetTermsAndConditionsGroupFor";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+        scope.getServiceData(tableName, getMethod, resellerId).then(function (response) {
+            scope.termsAndConditionsGroup = response.data;
+        });
+    }
+
+    // use this for PayTools :
+    Module.getPayToolsData = function (scope) {
+        if (scope. && scope.payTools.length > 0) {
+            return;
+        }
+        myInitial.payToolsTableName = "PayTools";
+        myInitial.payToolsGetMethod = "GetPayToolsByResellerIdFor";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+        scope.getServiceData(tableName, getMethod, resellerId).then(function (response) {
+            scope.payTools = response.data;
+        });
+    }
+
+    // use this for PlanFeaturesBase :
+    Module.getPlanFeaturesBaseData = function (scope) {
+        if (scope.planFeaturesBase && scope.planFeaturesBase.length > 0) {
+            return;
+        }
+        myInitial.planFeaturesBaseTableName = "PlanFeaturesBase";
+        myInitial.planFeaturesBaseGetMethod = "GetPlanFeaturesBaseFor";
+        var resellerId = CmpToolUtility.getResellerIdByName(CmpToolStatic.selectedMarketplace);
+        scope.getServiceData(tableName, getMethod, resellerId).then(function (response) {
+            scope.planFeaturesBase = response.data;
+        });
+    }
+
+    // use this for ResxDetail :
+    Module.getResxDetailData = function (scope) {
+        if (scope.resxDetail && scope.resxDetail.length > 0) {
+            return;
+        }
+        myInitial.resxDetailTableName = "ResxDetail";
+        myInitial.resxDetailGetMethod = "GetResxDetailFor";
+        scope.getServiceData(tableName, getMethod).then(function (response) {
+            scope.resxDetail = response.data;
+        });
+    }
+
+    // New  data: Need to add scope.xxx = null to myModule.clean() function in app.util.js
+
+    return Module;
+
+})(appData || {});

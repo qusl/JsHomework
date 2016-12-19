@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>My Notes</title>
+        <link href="/lib/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+        <script src="/lib/sweetalert2/sweetalert2.min.js"></script>
+        <script src="/lib/jquery/jquery-2.1.4.min.js"></script>
+        <script src="/lib/angular/angular.min.js"></script>
+        <script src="/scripts/app.initial.js"></script>
+        <script src="/scripts/app.util.js"></script>
+        <script src="/scripts/app.service.helper.js"></script>
+        <script src="/lib/ckeditor/ckeditor.js"></script>
+        <script src="/lib/ckeditor/styles.js"></script>
+        <script src="/lib/ckeditor/sample.js"></script>
+        <link href="/lib/toastr/toastr.min.css" rel="stylesheet" />
+        <script src="/lib/toastr/toastr.min.js"></script>
+        <link href="/css/reportStyles.css" rel="stylesheet" />
+    </head>
+
+    <body ng-app="appHtml" ng-controller="HtmlController">
+
+        <div id="loading" class="hide">
+            <div id="loading-content">
+                <img src="/images/loading.gif" />
+            </div>
+        </div>
+
+        <textarea name="editor1" id="editor1" rows="0" cols="0" style="display:none"></textarea>
+        <br />
+        <div id="footerdiv" style="display:none; text-align:center">
+            My Notes - {{userName}} &nbsp; &nbsp;
+            <input type="button" value="Save" ng-click="saveHtml()" />
+        </div>
+
+        <script>
+            var app = angular.module("appHtml", []);
+            app.controller("HtmlController", function ($scope, $http) {
+                CmpToolUtility.showLoadingPage();
+                $scope.userName = localStorage.getItem('username');
+                var fullUrl = CmpToolStatic.apiUrl + "Api/Login/UpdateHtmlApi" + "/";
+                $scope.saveHtml = function () {
+                    CmpToolUtility.showLoadingPage();
+                    var editorResult = '';
+                    $('body').find("iframe").each(function () {
+                        var ifrm = this;
+                        var doc = ifrm.contentDocument ? ifrm.contentDocument : ifrm.contentWindow.document;
+                        editorResult = doc.body.innerHTML;
+                    });
+                    var data = {
+                        FakeKey: 1,
+                        UserName: $scope.userName,
+                        HtmlContent: editorResult
+                    };
+                    var keyName = "FakeKey";
+                    window.CmpTool.ServiceHelper.updateItem($http, fullUrl, data, keyName);
+                    localStorage.setItem("displayCategory_categoryHtml", editorResult);
+                };
+                retrieveData($scope, $http, $scope.userName);
+            });
+
+            var retrieveData = function (scope, myhttp, userName) {
+                var notesTable = 'Login';
+                var notesMethod = 'GetHtmlContent';
+                var fullUrlForNotes = CmpToolStatic.apiUrl + "Api/" + notesTable + "/" + notesMethod + '/1/?username=' + userName;
+                window.CmpTool.ServiceHelper.getItem(myhttp, fullUrlForNotes).then(function (notesResponse) {
+                    var notesHtml = notesResponse.data;
+                    if (!notesHtml || notesHtml === 'null') notesHtml = 'We can write down the notes for CMP Config Tool here, or use this page to copy/paste text from/to VDI.';
+                    
+                    CKEDITOR.replace('editor1');
+                    var editor = document.getElementById('editor1');
+                    editor.innerHTML = notesHtml;
+
+                    $('#footerdiv').show();
+                    CmpToolUtility.hideLoadingPage();
+                });
+            }
+
+        </script>
+
+    </body>
+</html>

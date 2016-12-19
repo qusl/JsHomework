@@ -1,0 +1,936 @@
+/*********************************
+ METRONIC SQUARE STYLE COMPONENTS
+*********************************/
+
+
+/*
+ Internet Explorer 10 doesn't differentiate device width from viewport width, and thus doesn't
+ properly apply the media queries in Bootstrap's CSS. To address this,
+ you can optionally include the following CSS and JavaScript to work around this problem until Microsoft issues a fix.
+*/
+@-webkit-viewport {
+  width: device-width;
+}
+@-moz-viewport {
+  width: device-width;
+}
+@-ms-viewport {
+  width: device-width;
+}
+@-o-viewport {
+  width: device-width;
+}
+@viewport {
+  width: device-width;
+}
+/*
+ Internet Explorer 10 doesn't differentiate device width from viewport width,
+ and thus doesn't properly apply the media queries in Bootstrap's CSS. To address this, following CSS code applied
+*/
+@-ms-viewport {
+  width: auto !important;
+}
+/* Custom scrollbars for webkit browsers */
+/* - this doesn't work on Chrome for some reason. Scrollbar disappears.
+::-webkit-scrollbar {
+  width: 12px !important;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #eaeaea;
+  border-left: 1px solid #cecece;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #cecece;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #aaaaaa;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 0;
+  box-shadow: none;
+  border: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 0;
+  box-shadow: none;
+  border: 0;
+}
+*/
+
+/***
+Custom Bootstrap Badges
+***/
+.badge {
+  font-size: 11px !important;
+  font-weight: 300;
+  text-align: center;
+  height: 18px;
+  padding: 3px 6px 3px 6px;
+  -webkit-border-radius: 12px !important;
+  -moz-border-radius: 12px !important;
+  border-radius: 12px !important;
+  text-shadow: none !important;
+  text-align: center;
+  vertical-align: middle;
+}
+.badge.badge-roundless {
+  -webkit-border-radius: 0 !important;
+  -moz-border-radius: 0 !important;
+  border-radius: 0 !important;
+}
+.badge.badge-empty {
+  display: inline-block;
+  padding: 0;
+  min-width: 8px;
+  height: 8px;
+  width: 8px;
+}
+
+/* Badge variants */
+.badge-default {
+  background-color: #c6c6c6;
+  background-image: none;
+}
+
+.badge-primary {
+  background-color: #428bca;
+  background-image: none;
+}
+
+.badge-info {
+  background-color: #89C4F4;
+  background-image: none;
+}
+
+.badge-success {
+  background-color: #45B6AF;
+  background-image: none;
+}
+
+.badge-danger {
+  background-color: #F3565D;
+  background-image: none;
+}
+
+.badge-warning {
+  background-color: #dfba49;
+  background-image: none;
+}
+
+/* Fix badge position for navs */
+.nav.nav-pills > li > a > .badge,
+.nav.nav-stacked > li > a > .badge {
+  margin-top: -2px;
+}
+
+/***
+Dropdown Menu Badges
+***/
+.dropdown-menu > li > a > .badge {
+  position: absolute;
+  margin-top: 1px;
+  right: 3px;
+  display: inline;
+  font-size: 11px;
+  font-weight: 300;
+  text-shadow: none;
+  height: 18px;
+  padding: 3px 6px 3px 6px;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-border-radius: 12px !important;
+  -moz-border-radius: 12px !important;
+  border-radius: 12px !important;
+}
+.dropdown-menu.badge-roundless {
+  -webkit-border-radius: 0 !important;
+  -moz-border-radius: 0 !important;
+  border-radius: 0 !important;
+}
+
+
+
+
+
+/***
+Customized Bootstrap Close Icon
+***/
+.close {
+  display: inline-block;
+  margin-top: 0px;
+  margin-right: 0px;
+  width: 9px;
+  height: 9px;
+  background-repeat: no-repeat !important;
+  text-indent: -10000px;
+  outline: none;
+  background-image: url("/content/metronic/global/img/remove-icon-small.png") !important;
+}
+
+/***
+Customized Bootstrap Dropdowns
+***/
+/***
+Dropdowns
+***/
+.dropup.open > .dropdown-toggle,
+.dropdown.open > .dropdown-toggle {
+  border-color: #ddd;
+}
+
+/***
+Dropdown Menu
+***/
+.dropdown-menu {
+  min-width: 175px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  list-style: none;
+  text-shadow: none;
+  padding: 0px;
+  margin: 10px  0px 0px 0px;
+  background-color: #fffff;
+  box-shadow: 5px 5px rgba(102, 102, 102, 0.1);
+  border: 1px solid #eee;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+}
+.dropdown-menu li.divider {
+  background: #f1f3f6;
+}
+.dropdown-menu li > a {
+  padding: 8px 14px;
+  /*color: #555;*/
+  text-decoration: none;
+  display: block;
+  clear: both;
+  font-weight: 300;
+  line-height: 18px;
+  white-space: nowrap;
+}
+.dropdown-menu li > a > [class^="fa-"],
+.dropdown-menu li > a > [class*=" fa-"] {
+  color: #888;
+}
+.dropdown-menu li > a > [class^="icon-"],
+.dropdown-menu li > a > [class*=" icon-"] {
+  color: #666;
+}
+.dropdown-menu li > a > [class^="glyphicon-"],
+.dropdown-menu li > a > [class*=" glyphicon-"] {
+  color: #888;
+}
+.dropdown-menu li > a:hover,
+.dropdown-menu .active > a,
+.dropdown-menu .active > a:hover {
+  text-decoration: none;
+  background-image: none;
+  background-color: #f6f6f6;
+  color: #555;
+  filter: none;
+}
+.dropdown-menu.bottom-up {
+  top: auto;
+  bottom: 100%;
+  margin-bottom: 2px;
+}
+
+.dropdown > .dropdown-menu,
+.dropdown-toggle > .dropdown-menu,
+.btn-group > .dropdown-menu {
+  margin-top: 10px;
+}
+.dropdown > .dropdown-menu:before,
+.dropdown-toggle > .dropdown-menu:before,
+.btn-group > .dropdown-menu:before {
+  position: absolute;
+  top: -8px;
+  left: 9px;
+  right: auto;
+  display: inline-block !important;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #e0e0e0;
+  border-left: 8px solid transparent;
+  content: '';
+}
+.dropdown > .dropdown-menu:after,
+.dropdown-toggle > .dropdown-menu:after,
+.btn-group > .dropdown-menu:after {
+  position: absolute;
+  top: -7px;
+  left: 10px;
+  right: auto;
+  display: inline-block !important;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #fff;
+  border-left: 7px solid transparent;
+  content: '';
+}
+.dropdown > .dropdown-menu.pull-left:before,
+.dropdown-toggle > .dropdown-menu.pull-left:before,
+.btn-group > .dropdown-menu.pull-left:before {
+  left: auto;
+  right: 9px;
+}
+.dropdown > .dropdown-menu.pull-left:after,
+.dropdown-toggle > .dropdown-menu.pull-left:after,
+.btn-group > .dropdown-menu.pull-left:after {
+  left: auto;
+  right: 10px;
+}
+.dropdown > .dropdown-menu.pull-right:before,
+.dropdown-toggle > .dropdown-menu.pull-right:before,
+.btn-group > .dropdown-menu.pull-right:before {
+  left: auto;
+  right: 9px;
+}
+.dropdown > .dropdown-menu.pull-right:after,
+.dropdown-toggle > .dropdown-menu.pull-right:after,
+.btn-group > .dropdown-menu.pull-right:after {
+  left: auto;
+  right: 10px;
+}
+.dropdown.dropup > .dropdown-menu,
+.dropdown-toggle.dropup > .dropdown-menu,
+.btn-group.dropup > .dropdown-menu {
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+.dropdown.dropup > .dropdown-menu:after, .dropdown.dropup > .dropdown-menu:before,
+.dropdown-toggle.dropup > .dropdown-menu:after,
+.dropdown-toggle.dropup > .dropdown-menu:before,
+.btn-group.dropup > .dropdown-menu:after,
+.btn-group.dropup > .dropdown-menu:before {
+  display: none !important;
+}
+
+/* Dropdown submenu support for Bootsrap 3 */
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu > .dropdown-menu {
+  top: 5px;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+}
+.dropdown-submenu > a:after {
+  position: absolute;
+  display: inline-block;
+  font-size: 14px;
+  right: 7px;
+  top: 7px;
+  font-family: FontAwesome;
+  height: auto;
+  content: "\f105";
+  font-weight: 300;
+}
+.dropdown-submenu:hover > .dropdown-menu {
+  display: block;
+}
+.dropdown-submenu:hover > a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left > .dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+}
+.dropup .dropdown-submenu > .dropdown-menu {
+  top: auto;
+  bottom: 0;
+  margin-top: 0;
+  margin-bottom: -2px;
+}
+
+.nav.pull-right > li > .dropdown-menu,
+.nav > li > .dropdown-menu.pull-right {
+  right: 0;
+  left: auto;
+}
+.nav.pull-right > li > .dropdown-menu:before,
+.nav > li > .dropdown-menu.pull-right:before {
+  right: 12px;
+  left: auto;
+}
+.nav.pull-right > li > .dropdown-menu:after,
+.nav > li > .dropdown-menu.pull-right:after {
+  right: 13px;
+  left: auto;
+}
+.nav.pull-right > li > .dropdown-menu .dropdown-menu,
+.nav > li > .dropdown-menu.pull-right .dropdown-menu {
+  right: 100%;
+  left: auto;
+  margin-right: -1px;
+  margin-left: 0;
+}
+
+@media (max-width: 767px) {
+  /* 767px */
+  .navbar-nav .open .dropdown-menu {
+    position: absolute;
+    float: left;
+    width: auto;
+    margin-top: 0;
+    background-color: #ffffff;
+    border: 1px solid #efefef;
+    box-shadow: 5px 5px rgba(102, 102, 102, 0.1);
+  }
+  .navbar-nav .open .dropdown-menu > li > a {
+    padding: 6px 0 6px 13px;
+    color: #333;
+  }
+  .navbar-nav .open .dropdown-menu > li > a:hover,
+  .navbar-nav .open .dropdown-menu > li > a:active {
+    background-color: #eee;
+  }
+}
+
+
+
+
+
+/***
+Customized Bootstrap Pagination
+***/
+.pagination {
+  margin: 10px 0;
+}
+.pagination.pagination-circle > li:first-child > a {
+  border-radius: 25px 0 0 25px !important;
+}
+.pagination.pagination-circle > li:last-child > a {
+  border-radius: 0 25px 25px 0 !important;
+}
+.pagination .active > a,
+.pagination .active > a:hover {
+  background: #eee;
+  border-color: #dddddd;
+  color: #333;
+}
+
+
+
+
+
+
+/***
+Customized Bootstrap Tables
+***/
+/***
+Default table
+***/
+.table.table-bordered thead > tr > th {
+  border-bottom: 0;
+}
+.table tr.heading > th {
+  background-color: #eee !important;
+}
+.table td .img-responsive {
+  width: 100%;
+}
+
+/* Contextual table row variants */
+.table > thead > tr > td.active,
+.table > thead > tr > th.active, .table > thead > tr.active > td, .table > thead > tr.active > th,
+.table > tbody > tr > td.active,
+.table > tbody > tr > th.active,
+.table > tbody > tr.active > td,
+.table > tbody > tr.active > th,
+.table > tfoot > tr > td.active,
+.table > tfoot > tr > th.active,
+.table > tfoot > tr.active > td,
+.table > tfoot > tr.active > th {
+  background: #a6c8e6;
+  color: #132339;
+}
+
+.table-hover > tbody > tr > td.active:hover,
+.table-hover > tbody > tr > th.active:hover, .table-hover > tbody > tr.active:hover > td, .table-hover > tbody > tr.active:hover > th {
+  background: #92bce0;
+}
+
+.table > thead > tr > td.success,
+.table > thead > tr > th.success, .table > thead > tr.success > td, .table > thead > tr.success > th,
+.table > tbody > tr > td.success,
+.table > tbody > tr > th.success,
+.table > tbody > tr.success > td,
+.table > tbody > tr.success > th,
+.table > tfoot > tr > td.success,
+.table > tfoot > tr > th.success,
+.table > tfoot > tr.success > td,
+.table > tfoot > tr.success > th {
+  background: #dff0d8;
+  color: #3c763d;
+}
+
+.table-hover > tbody > tr > td.success:hover,
+.table-hover > tbody > tr > th.success:hover, .table-hover > tbody > tr.success:hover > td, .table-hover > tbody > tr.success:hover > th {
+  background: #d0e9c6;
+}
+
+.table > thead > tr > td.info,
+.table > thead > tr > th.info, .table > thead > tr.info > td, .table > thead > tr.info > th,
+.table > tbody > tr > td.info,
+.table > tbody > tr > th.info,
+.table > tbody > tr.info > td,
+.table > tbody > tr.info > th,
+.table > tfoot > tr > td.info,
+.table > tfoot > tr > th.info,
+.table > tfoot > tr.info > td,
+.table > tfoot > tr.info > th {
+  background: #d9edf7;
+  color: #31708f;
+}
+
+.table-hover > tbody > tr > td.info:hover,
+.table-hover > tbody > tr > th.info:hover, .table-hover > tbody > tr.info:hover > td, .table-hover > tbody > tr.info:hover > th {
+  background: #c4e3f3;
+}
+
+.table > thead > tr > td.warning,
+.table > thead > tr > th.warning, .table > thead > tr.warning > td, .table > thead > tr.warning > th,
+.table > tbody > tr > td.warning,
+.table > tbody > tr > th.warning,
+.table > tbody > tr.warning > td,
+.table > tbody > tr.warning > th,
+.table > tfoot > tr > td.warning,
+.table > tfoot > tr > th.warning,
+.table > tfoot > tr.warning > td,
+.table > tfoot > tr.warning > th {
+  background: #fcf8e3;
+  color: #8a6d3b;
+}
+
+.table-hover > tbody > tr > td.warning:hover,
+.table-hover > tbody > tr > th.warning:hover, .table-hover > tbody > tr.warning:hover > td, .table-hover > tbody > tr.warning:hover > th {
+  background: #faf2cc;
+}
+
+.table > thead > tr > td.danger,
+.table > thead > tr > th.danger, .table > thead > tr.danger > td, .table > thead > tr.danger > th,
+.table > tbody > tr > td.danger,
+.table > tbody > tr > th.danger,
+.table > tbody > tr.danger > td,
+.table > tbody > tr.danger > th,
+.table > tfoot > tr > td.danger,
+.table > tfoot > tr > th.danger,
+.table > tfoot > tr.danger > td,
+.table > tfoot > tr.danger > th {
+  background: #f2dede;
+  color: #a94442;
+}
+
+.table-hover > tbody > tr > td.danger:hover,
+.table-hover > tbody > tr > th.danger:hover, .table-hover > tbody > tr.danger:hover > td, .table-hover > tbody > tr.danger:hover > th {
+  background: #ebcccc;
+}
+
+/***
+Responsive & Scrollable Tables
+***/
+.table-scrollable {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 1px solid #dddddd;
+  margin: 10px 0 !important;
+}
+.table-scrollable.table-scrollable-borderless {
+  border: 0;
+}
+.table-scrollable > .table {
+  width: 100% !important;
+  margin: 0 !important;
+  margin-bottom: 0;
+  background-color: #fff;
+}
+.table-scrollable > .table > thead > tr > th,
+.table-scrollable > .table > tbody > tr > th,
+.table-scrollable > .table > tfoot > tr > th,
+.table-scrollable > .table > tfoot > tr > th,
+.table-scrollable > .table > tfoot > tr > td {
+  white-space: nowrap;
+}
+.table-scrollable > .table-bordered {
+  border: 0;
+}
+.table-scrollable > .table-bordered > thead > tr > th:first-child,
+.table-scrollable > .table-bordered > tbody > tr > th:first-child,
+.table-scrollable > .table-bordered > tfoot > tr > th:first-child,
+.table-scrollable > .table-bordered > thead > tr > td:first-child,
+.table-scrollable > .table-bordered > tbody > tr > td:first-child,
+.table-scrollable > .table-bordered > tfoot > tr > td:first-child {
+  border-left: 0;
+}
+.table-scrollable > .table-bordered > thead > tr > th:last-child,
+.table-scrollable > .table-bordered > tbody > tr > th:last-child,
+.table-scrollable > .table-bordered > tfoot > tr > th:last-child,
+.table-scrollable > .table-bordered > thead > tr > td:last-child,
+.table-scrollable > .table-bordered > tbody > tr > td:last-child,
+.table-scrollable > .table-bordered > tfoot > tr > td:last-child {
+  border-right: 0;
+}
+.table-scrollable > .table-bordered > thead > tr:last-child > th,
+.table-scrollable > .table-bordered > tbody > tr:last-child > th,
+.table-scrollable > .table-bordered > tfoot > tr:last-child > th,
+.table-scrollable > .table-bordered > thead > tr:last-child > td,
+.table-scrollable > .table-bordered > tbody > tr:last-child > td,
+.table-scrollable > .table-bordered > tfoot > tr:last-child > td {
+  border-bottom: 0;
+}
+
+/***
+Responsive Flip Scroll Tables
+***/
+.flip-scroll table {
+  width: 100%;
+}
+
+@media only screen and (max-width: 768px) {
+  /* 768px */
+  .flip-scroll .flip-content:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+  }
+
+  .flip-scroll * html .flip-content {
+    zoom: 1;
+  }
+
+  .flip-scroll *:first-child + html .flip-content {
+    zoom: 1;
+  }
+
+  .flip-scroll table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  .flip-scroll th,
+  .flip-scroll td {
+    margin: 0;
+    vertical-align: top;
+  }
+
+  .flip-scroll th {
+    text-align: left;
+    border: 0 !important;
+    border-bottom: 1px solid #ddd !important;
+    border-right: 1px solid #ddd !important;
+    font-size: 13px !important;
+    padding: 5px;
+    width: auto !important;
+  }
+
+  .flip-scroll table {
+    display: block;
+    position: relative;
+    width: 100%;
+  }
+
+  .flip-scroll thead {
+    display: block;
+    float: left;
+  }
+
+  .flip-scroll tbody {
+    display: block;
+    width: auto;
+    position: relative;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .flip-scroll thead tr {
+    display: block;
+  }
+
+  .flip-scroll th {
+    display: block;
+    text-align: right;
+  }
+
+  .flip-scroll tbody tr {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: -5px;
+  }
+
+  .flip-scroll td {
+    display: block;
+    min-height: 1.25em;
+    text-align: left;
+    border-top: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+  }
+
+  /* sort out borders */
+  .flip-scroll th {
+    border-bottom: 0;
+    border-left: 0;
+  }
+
+  .flip-scroll td {
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+  }
+
+  .flip-scroll tbody tr {
+    border-left: 1px solid #ddd;
+  }
+
+  .flip-scroll th:last-child,
+  .flip-scroll td:last-child {
+    border-bottom: 1px solid #ddd;
+  }
+}
+/***
+Custom tables
+***/
+.table-toolbar {
+  margin-bottom: 15px;
+}
+.table-toolbar:before, .table-toolbar:after {
+  content: " ";
+  display: table;
+}
+.table-toolbar:after {
+  clear: both;
+}
+
+.table.table-full-width {
+  width: 100% !important;
+}
+
+.table .btn {
+  margin-top: 0px;
+  margin-left: 0px;
+  margin-right: 5px;
+}
+
+.table thead tr th {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.table-advance {
+  margin-bottom: 10px !important;
+}
+
+.table-advance thead {
+  color: #999;
+}
+
+.table-advance thead tr th {
+  background-color: #DDD;
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+}
+
+.table-advance div.success,
+.table-advance div.info,
+.table-advance div.important,
+.table-advance div.warning,
+.table-advance div.danger {
+  position: absolute;
+  margin-top: -5px;
+  float: left;
+  width: 2px;
+  height: 30px;
+  margin-right: 20px !important;
+}
+
+.table-advance tr td {
+  border-left-width: 0px;
+}
+
+.table-advance tr td:first-child {
+  border-left-width: 1px !important;
+}
+
+.table-advance tr td.highlight:first-child a {
+  margin-left: 15px;
+}
+
+.table-advance td.highlight div.primary {
+  border-left: 2px solid #428bca;
+}
+
+.table-advance td.highlight div.success {
+  border-left: 2px solid #45B6AF;
+}
+
+.table-advance td.highlight div.info {
+  border-left: 2px solid #89C4F4;
+}
+
+.table-advance td.highlight div.warning {
+  border-left: 2px solid #dfba49;
+}
+
+.table-advance td.highlight div.danger {
+  border-left: 2px solid #F3565D;
+}
+
+@media (max-width: 767px) {
+  /* 767px */
+  .table-advance tr > td.highlight:first-child a {
+    margin-left: 8px;
+  }
+}
+/***
+Light Table
+***/
+.table.table-light {
+  border: 0 !important;
+}
+.table.table-light > thead > tr:hover > th {
+  background: none;
+}
+.table.table-light > thead > tr.uppercase {
+  text-transform: uppercase;
+}
+.table.table-light > thead > tr > th {
+  font-weight: 600;
+  font-size: 13px;
+  color: #a7b3b9;
+  font-family: "Open Sans", sans-serif;
+  border: 0;
+  border-bottom: 1px solid #F2F5F8;
+}
+.table.table-light > tbody > tr:last-child > td {
+  border: 0;
+}
+.table.table-light > tbody > tr > td {
+  border: 0;
+  border-bottom: 1px solid #F2F5F8;
+  color: #9ca8b0;
+  vertical-align: middle;
+}
+.table.table-light > tbody > tr > td.fit {
+  width: 1px;
+  padding-right: 3px;
+}
+.table.table-light > tbody > tr > td .user-pic {
+  display: inline-block;
+  vertical-align: middle;
+  height: 30px;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  -ms-border-radius: 100%;
+  -o-border-radius: 100%;
+  border-radius: 100%;
+}
+.table.table-light.table-hover > tbody > tr > td:hover,
+.table.table-light.table-hover > tbody > tr > th:hover, .table.table-light.table-hover > tbody > tr:hover > td, .table.table-light.table-hover > tbody > tr:hover > th {
+  background: #f9fafb;
+}
+
+
+
+
+
+/***
+AngularJS Basic Animations
+***/
+@-webkit-keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+}
+@-moz-keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -moz-transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    -moz-transform: translateY(0);
+  }
+}
+@-o-keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -o-transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    -o-transform: translateY(0);
+  }
+}
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-in-up {
+  -webkit-animation: fadeInUp .5s;
+  animation: fadeInUp .5s;
+}
+
+@-webkit-keyframes bounceDelay {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0);
+  }
+  40% {
+    -webkit-transform: scale(1);
+  }
+}
+@keyframes bounceDelay {
+  0%, 80%, 100% {
+    transform: scale(0);
+    -webkit-transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+    -webkit-transform: scale(1);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

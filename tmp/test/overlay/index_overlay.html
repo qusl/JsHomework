@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="../../lib/angular/angular.min.js"></script>
+    <script src="../../lib/angular/angular-sanitize.min.js"></script>
+    <script src="../../lib/jquery/jquery-2.1.4.min.js"></script>
+    <script src="../../lib/jquery/globalize.min.js"></script>
+    <script src="../../lib/devextreme/dx.web.js"></script>
+
+    <script src="data.js"></script>
+    <link href="../../css/dx.common.css" rel="stylesheet" />
+    <link href="../../css/dx.light.css" rel="stylesheet" />
+    <script src="overlayjs.js"></script>
+</head>
+<body ng-app="myApp">
+    <div id="container" ng-controller="myContrl">
+        <input type="button" ng-click="loadingVisible = true" value="Show Overlay"/>
+        <div id="employee" ng-init="employeeInfo">
+            <p>
+                Birth date: <b>{{employeeInfo.Birth_Date}}</b>
+            </p>
+        </div>
+
+        <div class="loadpanel" dx-load-panel="loadOptions"></div>
+
+    </div>
+</body>
+</html>
