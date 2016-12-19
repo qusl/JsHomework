@@ -1,45 +1,4 @@
-
-var oldData = [
-    {
-        "firstName": "Tom",
-        "lastName": "Zhang",
-        "ext": "10010",
-        "cell": "416-000-0000",
-        "alt": "",
-        "title": "Manager",
-        "email": "tomz@jsrocks.com"
-    }
-],
-    newData = [
-        {
-            "firstName": "Tom",
-            "lastName": "Zhang",
-            "ext": "1001",
-            "cell": "416-000-0000",
-            "alt": "416-456-4567",
-            "title": "Manager",
-            "email": "tomz@jsrocks.com"
-        },
-        {
-            "firstName": "Peter",
-            "lastName": "Wang",
-            "ext": "1003",
-            "cell": "647-222-2222",
-            "alt": "416-333-3333",
-            "title": "QA",
-            "email": "peterw@jsrocks.com"
-        }
-    ];
-
-var getChanges = function (srcData, destData) {
-    var objLeng = Object.keys(srcData).length;
-    for (var i = 0; i < objLeng; i++) {
-        if (srcData[Object.keys(srcData)[i]] !== destData[Object.keys(destData)[i]]) {
-            return srcData;
-        }
-    }
-    return null;
-}
+'use strict';
 
 var isSameObj = function (srcData, destData) {
     var lengSrc = Object.keys(srcData).length;
@@ -56,54 +15,71 @@ var isSameObj = function (srcData, destData) {
     return true;
 }
 
-var isSamePerson = function (srcData, destData) {
-    if(srcData.firstName == destData.firstName && srcData.lastName === destData.lastName){
-        return true;
+var compare = function(oldData, newData) {
+    var result = {
+        added: [],
+        deleted: [],
+        modified: []
     }
-    return false;
-}
-
-var objAdded = [], objDeleted=[], objModified=[];
-
-for (var i = 0; i < oldData.length; i++) {
-    var objSrc = oldData[i];
-    var canFind = false;
-    for (var j = 0; j < newData.length; j++) {
-        var objDest = newData[j];
-        var samePerson = isSamePerson(objSrc, objDest);
-        if (isSameObj(objSrc, objDest) || samePerson) {
-            canFind = true;
-        }
-
-        if (samePerson) {
-            var changes = getChanges(objSrc, objDest);
-            if (changes) {
-                objModified.push(changes);
+    for (var i = 0; i < newData.length; i++) {
+        var index = oldData.findIndex(function (old) {
+            return newData[i].email === old.email;
+        });
+        if(index < 0){
+            result.added.push(newData[i]);
+        }else{
+            if(!isSameObj(oldData[index], newData[i])){
+                result.modified.push(oldData[index]);
             }
-        } else {
-            var canFindInSrc = false;
-            for (var x = 0; x < oldData.length; x++) {
-                var objSrcTmp = oldData[x];
-                if (isSameObj(objSrcTmp, objDest)) {
-                    canFindInSrc = true;
-                }
-            }
-            if (!canFindInSrc) {
-                objAdded.push(objDest);
-            }
+            oldData.splice(index, 1);
         }
     }
-    if (!canFind) {
-        objDeleted.push(objSrc);
-    }
+    result.deleted = oldData;
+    return result;
 }
 
-var result = {
-    "added": objAdded,
-    "deleted": objDeleted,
-    "modified": objModified
-};
-console.log(result);
+
+// function generateData(num){
+//     let ret = [];
+//     for(let i = 0; i < num; i ++){
+//         ret.push({
+//             "firstName": "firstName" + i,
+//             "lastName": "lastName" + i,
+//              "ext": "ext" + i,
+//              "cell": "cell" + i,
+//              "alt": "alt" + i,
+//              "title": "title" + i,
+//              "email": "email" + i
+//         })
+//     }
+//     return ret;
+// }
+
+// let oldDataTest = generateData(100000);
+// let newDataTest = generateData(100000);
+
+// newDataTest.splice(0, 1);
+// newDataTest.splice(8, 1, {
+//     "firstName": "firstName" + "A",
+//     "lastName": "lastName" + "A",
+//     "ext": "ext" + "A",
+//     "cell": "cell" + "A",
+//     "alt": "alt" + "A",
+//     "title": "title" + "A",
+//     "email": "email" + "A"
+// });
+
+// newDataTest[5].title = 'new title';
+
+// let tt = newDataTest[3].title;
+// delete newDataTest[3].title;
+// newDataTest[3].title = tt;
+
+// console.time('a');
+// var result = compare(oldDataTest, newDataTest);
+// console.timeEnd('a');
+
+// console.log(result);
 
 
 
