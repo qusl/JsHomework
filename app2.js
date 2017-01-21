@@ -17,12 +17,12 @@ request.on('response', function (res) {
         tableStr = tableStr.replace(/<\/tr>/g, '');
         tableStr = tableStr.replace(/<tr bgcolor=DDDDDD>/g, '<tr>');
         let items = tableStr.split('<tr>');
-        let keyNameArr = [];
         if (items.length < 2) {
             console.log('no data for table row');
         }
 
         // 2. get header
+        let keyNameArr = [];
         let header = items[1].replace(/<\/th>/g, '');
         let headerArr = header.split('<th>');
         for (let i = 0; i < headerArr.length; i++) {
