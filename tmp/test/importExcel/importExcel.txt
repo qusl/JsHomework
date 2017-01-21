@@ -1,6 +1,0 @@
-﻿
-1. it will run only in IE 9 and above ,and you have to activate activeX functionality from the settings ..
-
--- http://stackoverflow.com/questions/16630413/how-can-i-read-an-excel-file-with-javascript-without-activexobject
-
-2. online demo: http://oss.sheetjs.com/js-xlsx/
